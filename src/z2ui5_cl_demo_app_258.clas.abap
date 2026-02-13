@@ -8,15 +8,9 @@ CLASS z2ui5_cl_demo_app_258 DEFINITION PUBLIC FINAL CREATE PUBLIC.
 
     DATA mo_client TYPE REF TO z2ui5_if_client .
 
-    METHODS on_event
-      IMPORTING
-      !mo_client TYPE REF TO z2ui5_if_client .
-    METHODS render_main_view
-      IMPORTING
-      !mo_client TYPE REF TO z2ui5_if_client .
+    METHODS on_event.
+    METHODS render_main_view.
     METHODS render_site_content
-      IMPORTING
-      !mo_client       TYPE REF TO z2ui5_if_client
       CHANGING
       !lo_site_content TYPE REF TO z2ui5_cl_xml_view .
   PRIVATE SECTION.
@@ -142,7 +136,7 @@ CLASS z2ui5_cl_demo_app_258 IMPLEMENTATION.
                                                                                                          backgrounddesign = `Solid` )->get_parent( ).
 
     "Render content depending on the current site
-    render_site_content( EXPORTING mo_client = mo_client CHANGING lo_site_content = lo_site_content ).
+    render_site_content( CHANGING lo_site_content = lo_site_content ).
 
     mo_client->view_display( lo_view->stringify( ) ).
   ENDMETHOD.
@@ -179,7 +173,7 @@ CLASS z2ui5_cl_demo_app_258 IMPLEMENTATION.
       mv_selected_menu_entry = `Home`.
     ENDIF.
 
-    on_event( mo_client ).
-    render_main_view( mo_client ).
+    on_event( ).
+    render_main_view( ).
   ENDMETHOD.
 ENDCLASS.

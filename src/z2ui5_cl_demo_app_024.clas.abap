@@ -8,11 +8,11 @@ CLASS z2ui5_cl_demo_app_024 DEFINITION PUBLIC.
     DATA mv_input2 TYPE string.
     DATA mv_backend_event TYPE string.
 
+    DATA mo_client TYPE REF TO z2ui5_if_client.
+
   PROTECTED SECTION.
 
-    METHODS display_view
-      IMPORTING
-        client TYPE REF TO z2ui5_if_client.
+    METHODS display_view.
 
   PRIVATE SECTION.
 ENDCLASS.
@@ -24,33 +24,35 @@ CLASS z2ui5_cl_demo_app_024 IMPLEMENTATION.
     DATA(lo_view) = z2ui5_cl_xml_view=>factory( ).
     lo_view->shell(
         )->page( title = `abap2UI5 - flow logic - APP 01`
-        navbuttonpress = client->_event_nav_app_leave( )
-        shownavbutton  = client->check_app_prev_stack( )
+        navbuttonpress = mo_client->_event_nav_app_leave( )
+        shownavbutton  = mo_client->check_app_prev_stack( )
        )->grid( `L6 M12 S12` )->content( `layout`
        )->simple_form( `Controller` )->content( `form`
       )->label( `Demo`
          )->button( text  = `call new app (first View)`
-                    press = client->_event( `CALL_NEW_APP` )
+                    press = mo_client->_event( `CALL_NEW_APP` )
          )->label( `Demo`
          )->button( text  = `call new app (second View)`
-                    press = client->_event( `CALL_NEW_APP_VIEW` )
+                    press = mo_client->_event( `CALL_NEW_APP_VIEW` )
          )->label( `Demo`
          )->button( text  = `call new app (set Event)`
-                    press = client->_event( `CALL_NEW_APP_EVENT` )
+                    press = mo_client->_event( `CALL_NEW_APP_EVENT` )
          )->label( `Demo`
-         )->input( client->_bind_edit( mv_input )
+         )->input( mo_client->_bind_edit( mv_input )
          )->button( text  = `call new app (set data)`
-                    press = client->_event( `CALL_NEW_APP_READ` )
+                    press = mo_client->_event( `CALL_NEW_APP_READ` )
               )->label( `some data, you can read in the next app`
-         )->input( client->_bind_edit( mv_input2 ) ).
+         )->input( mo_client->_bind_edit( mv_input2 ) ).
 
-    client->view_display( lo_view->stringify( ) ).
+    mo_client->view_display( lo_view->stringify( ) ).
   ENDMETHOD.
 
   METHOD z2ui5_if_app~main.
 
+    me->mo_client = client.
+
     IF client->check_on_navigated( ).
-      display_view( client ).
+      display_view( ).
       IF mv_backend_event = `CALL_PREVIOUS_APP_INPUT_RETURN`.
         DATA(lo_called_app) = CAST z2ui5_cl_demo_app_025( client->get_app_prev( ) ).
         CLEAR mv_backend_event.

@@ -10,12 +10,10 @@ CLASS z2ui5_cl_demo_app_034 DEFINITION PUBLIC.
     DATA mv_main_xml TYPE string.
     DATA mv_popup_xml TYPE string.
 
-    METHODS view_main
-      IMPORTING
-        client TYPE REF TO z2ui5_if_client.
-    METHODS view_popup_bal
-      IMPORTING
-        client TYPE REF TO z2ui5_if_client.
+    METHODS view_main.
+    METHODS view_popup_bal.
+
+    DATA mo_client TYPE REF TO z2ui5_if_client.
 
   PROTECTED SECTION.
   PRIVATE SECTION.
@@ -29,8 +27,8 @@ CLASS z2ui5_cl_demo_app_034 IMPLEMENTATION.
     DATA(lo_page) = lo_view->shell(
         )->page(
                 title          = `abap2UI5 - Popups`
-                navbuttonpress = client->_event_nav_app_leave( )
-                shownavbutton  = client->check_app_prev_stack( ) ).
+                navbuttonpress = mo_client->_event_nav_app_leave( )
+                shownavbutton  = mo_client->check_app_prev_stack( ) ).
 
     DATA(lo_grid) = lo_page->grid( `L8 M12 S12` )->content( `layout` ).
 
@@ -38,7 +36,7 @@ CLASS z2ui5_cl_demo_app_034 IMPLEMENTATION.
         )->label( `01`
         )->button(
             text  = `Show bapiret tab`
-            press = client->_event( `POPUP_BAL` ) ).
+            press = mo_client->_event( `POPUP_BAL` ) ).
 
     mv_main_xml = lo_view->stringify( ).
   ENDMETHOD.
@@ -47,7 +45,7 @@ CLASS z2ui5_cl_demo_app_034 IMPLEMENTATION.
 
     DATA(lo_popup) = z2ui5_cl_xml_view=>factory_popup(
         )->dialog( `abap2ui5 - Popup Message Log`
-            )->table( client->_bind( mt_bapiret )
+            )->table( mo_client->_bind( mt_bapiret )
                 )->columns(
                     )->column( `5rem`
                         )->text( `Type` )->get_parent(
@@ -70,13 +68,15 @@ CLASS z2ui5_cl_demo_app_034 IMPLEMENTATION.
                 )->toolbar_spacer(
                 )->button(
                     text  = `close`
-                    press = client->_event( `POPUP_BAL_CLOSE` )
+                    press = mo_client->_event( `POPUP_BAL_CLOSE` )
                     type  = `Emphasized` ).
 
     mv_popup_xml = lo_popup->stringify( ).
   ENDMETHOD.
 
   METHOD z2ui5_if_app~main.
+
+    me->mo_client = client.
 
     IF client->check_on_init( ).
 
@@ -96,11 +96,11 @@ CLASS z2ui5_cl_demo_app_034 IMPLEMENTATION.
       mv_popup_name = `POPUP_BAL`.
     ENDIF.
 
-    view_main( client ).
+    view_main( ).
 
     CASE mv_popup_name.
       WHEN `POPUP_BAL`.
-        view_popup_bal( client ).
+        view_popup_bal( ).
     ENDCASE.
 
     client->view_display( mv_main_xml ).

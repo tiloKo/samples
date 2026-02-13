@@ -7,13 +7,13 @@ CLASS z2ui5_cl_demo_app_343 DEFINITION PUBLIC.
 
     METHODS get_data.
 
-    METHODS render_main
-      IMPORTING
-        !client TYPE REF TO z2ui5_if_client.
+    METHODS render_main.
 
     METHODS get_comp
       RETURNING
         VALUE(result) TYPE abap_component_tab.
+
+    DATA mo_client TYPE REF TO z2ui5_if_client.
 
   PROTECTED SECTION.
   PRIVATE SECTION.
@@ -79,31 +79,33 @@ CLASS z2ui5_cl_demo_app_343 IMPLEMENTATION.
 
     DATA(lo_view) = z2ui5_cl_xml_view=>factory( ).
     DATA(lo_page) = lo_view->shell( )->page( title          = `RTTI IV`
-                                                                navbuttonpress = client->_event_nav_app_leave( )
-                                                                shownavbutton  = client->check_app_prev_stack( ) ).
+                                                                navbuttonpress = mo_client->_event_nav_app_leave( )
+                                                                shownavbutton  = mo_client->check_app_prev_stack( ) ).
 
     TRY.
 
         DATA(lo_table) = lo_page->table( width   = `auto`
-                                     items = client->_bind( mt_data1 ) ).
+                                     items = mo_client->_bind( mt_data1 ) ).
 
-        client->message_box_display( `error - reference processed in binding without error` ).
+        mo_client->message_box_display( `error - reference processed in binding without error` ).
       CATCH cx_root.
-        client->message_box_display( `success - reference not allowed for binding throwed` ).
+        mo_client->message_box_display( `success - reference not allowed for binding throwed` ).
     ENDTRY.
 
-    client->view_display( lo_view->stringify( ) ).
+    mo_client->view_display( lo_view->stringify( ) ).
   ENDMETHOD.
 
   METHOD z2ui5_if_app~main.
 
+    me->mo_client = client.
+
     IF client->check_on_init( ).
       get_data( ).
-      render_main( client ).
+      render_main( ).
     ENDIF.
     IF client->get( )-check_on_navigated = abap_true
         AND client->check_on_init( )          = abap_false.
-      render_main( client ).
+      render_main( ).
     ENDIF.
   ENDMETHOD.
 ENDCLASS.

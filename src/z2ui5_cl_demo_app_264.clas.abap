@@ -16,12 +16,8 @@ CLASS z2ui5_cl_demo_app_264 DEFINITION PUBLIC.
 
     DATA mo_client TYPE REF TO z2ui5_if_client.
 
-    METHODS display_view
-      IMPORTING
-        mo_client TYPE REF TO z2ui5_if_client.
-    METHODS on_event
-      IMPORTING
-        mo_client TYPE REF TO z2ui5_if_client.
+    METHODS display_view.
+    METHODS on_event.
     METHODS display_popover
       IMPORTING
         id TYPE string.
@@ -94,7 +90,7 @@ CLASS z2ui5_cl_demo_app_264 IMPLEMENTATION.
     me->mo_client = client.
 
     IF mo_client->check_on_init( ).
-      display_view( mo_client ).
+      display_view( ).
 
       ms_text = `StepInput with valueState `.
 
@@ -112,6 +108,6 @@ CLASS z2ui5_cl_demo_app_264 IMPLEMENTATION.
       ENDLOOP.
     ENDIF.
 
-    on_event( mo_client ).
+    on_event( ).
   ENDMETHOD.
 ENDCLASS.

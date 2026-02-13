@@ -26,11 +26,9 @@ CLASS z2ui5_cl_demo_app_307 DEFINITION PUBLIC FINAL CREATE PUBLIC.
 
     METHODS initialization.
 
-    METHODS display_view
-      IMPORTING !mo_client TYPE REF TO z2ui5_if_client.
+    METHODS display_view.
 
-    METHODS on_event
-      IMPORTING !mo_client TYPE REF TO z2ui5_if_client.
+    METHODS on_event.
 
 ENDCLASS.
 
@@ -41,10 +39,10 @@ CLASS z2ui5_cl_demo_app_307 IMPLEMENTATION.
 
     IF mo_client->check_on_init( ).
       initialization( ).
-      display_view( mo_client ).
+      display_view( ).
     ENDIF.
 
-    on_event( mo_client ).
+    on_event( ).
   ENDMETHOD.
 
   METHOD initialization.

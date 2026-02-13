@@ -8,9 +8,9 @@ CLASS z2ui5_cl_demo_app_332 DEFINITION PUBLIC.
 
     METHODS get_data.
 
-    METHODS view_display
-      IMPORTING
-        !client TYPE REF TO z2ui5_if_client.
+    METHODS view_display.
+
+    DATA mo_client TYPE REF TO z2ui5_if_client.
 
   PROTECTED SECTION.
 
@@ -21,6 +21,8 @@ CLASS z2ui5_cl_demo_app_332 IMPLEMENTATION.
 
   METHOD z2ui5_if_app~main.
 
+    me->mo_client = client.
+
     IF client->check_on_init( ).
 
       get_data( ).
@@ -28,7 +30,7 @@ CLASS z2ui5_cl_demo_app_332 IMPLEMENTATION.
       mo_table_obj = z2ui5_cl_demo_app_333=>factory( i_data   = REF #( ms_struc )
                                                      vis_cols = 3 ).
 
-      view_display( client ).
+      view_display( ).
 
     ENDIF.
     IF ms_struc IS INITIAL.
@@ -42,11 +44,11 @@ CLASS z2ui5_cl_demo_app_332 IMPLEMENTATION.
 
     DATA(lo_view) = z2ui5_cl_xml_view=>factory( ).
     DATA(lo_page) = lo_view->shell( )->page( title          = `RTTI IV`
-                                                                navbuttonpress = client->_event_nav_app_leave( )
-                                                                shownavbutton  = client->check_app_prev_stack( ) ).
+                                                                navbuttonpress = mo_client->_event_nav_app_leave( )
+                                                                shownavbutton  = mo_client->check_app_prev_stack( ) ).
 
     lo_page->button( text  = `GO`
-                  press = client->_event( `GO` )
+                  press = mo_client->_event( `GO` )
                   type  = `Success` ).
 
     DATA(lo_form) = lo_page->simple_form( editable        = abap_true
@@ -69,14 +71,14 @@ CLASS z2ui5_cl_demo_app_332 IMPLEMENTATION.
       DATA(lo_line) = lo_form->label( wrapping = abap_false
                                 text     = layout->name ).
 
-      lo_line->input( value   = client->_bind( <value> )
-                   visible = client->_bind( val       = layout->visible
+      lo_line->input( value   = mo_client->_bind( <value> )
+                   visible = mo_client->_bind( val       = layout->visible
                                             tab       = mo_table_obj->ms_data-t_layout
                                             tab_index = lv_index )
                    enabled = abap_false ).
     ENDLOOP.
 
-    client->view_display( lo_view->stringify( ) ).
+    mo_client->view_display( lo_view->stringify( ) ).
   ENDMETHOD.
 
   METHOD get_data.

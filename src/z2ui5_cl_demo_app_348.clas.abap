@@ -8,9 +8,9 @@ CLASS z2ui5_cl_demo_app_348 DEFINITION PUBLIC.
 
     METHODS get_data.
 
-    METHODS view_display
-      IMPORTING
-        !client TYPE REF TO z2ui5_if_client.
+    METHODS view_display.
+
+    DATA mo_client TYPE REF TO z2ui5_if_client.
 
   PROTECTED SECTION.
 
@@ -18,14 +18,15 @@ CLASS z2ui5_cl_demo_app_348 DEFINITION PUBLIC.
     METHODS xml_form
       IMPORTING
         i_data   TYPE REF TO data
-        i_page   TYPE REF TO z2ui5_cl_xml_view
-        i_client TYPE REF TO z2ui5_if_client.
+        i_page   TYPE REF TO z2ui5_cl_xml_view.
 
 ENDCLASS.
 
 CLASS z2ui5_cl_demo_app_348 IMPLEMENTATION.
 
   METHOD z2ui5_if_app~main.
+
+    me->mo_client = client.
 
     IF client->check_on_init( ).
 
@@ -34,7 +35,7 @@ CLASS z2ui5_cl_demo_app_348 IMPLEMENTATION.
       mo_layout_obj = z2ui5_cl_demo_app_333=>factory( i_data   = REF #( ms_struc )
                                                       vis_cols = 5 ).
 
-      view_display( client ).
+      view_display( ).
     ENDIF.
 
     IF client->check_on_event( `GO` ).
@@ -44,7 +45,7 @@ CLASS z2ui5_cl_demo_app_348 IMPLEMENTATION.
 
     IF client->get( )-check_on_navigated = abap_true
         AND client->check_on_init( )          = abap_false.
-      view_display( client ).
+      view_display( ).
     ENDIF.
 
     IF mo_layout_obj->mr_data IS NOT BOUND.
@@ -68,18 +69,18 @@ CLASS z2ui5_cl_demo_app_348 IMPLEMENTATION.
 
     DATA(lo_view) = z2ui5_cl_xml_view=>factory( ).
     DATA(lo_page) = lo_view->shell( )->page( title          = `RTTI IV`
-                                                                navbuttonpress = client->_event_nav_app_leave( )
-                                                                shownavbutton  = client->check_app_prev_stack( ) ).
+                                                                navbuttonpress = mo_client->_event_nav_app_leave( )
+                                                                shownavbutton  = mo_client->check_app_prev_stack( ) ).
 
     lo_page->button( text  = `CALL Next App`
-                  press = client->_event( `GO` )
+                  press = mo_client->_event( `GO` )
                   type  = `Success` ).
 
     xml_form( i_data   = REF #( ms_struc )
               i_page   = lo_page
-              i_client = client ).
+              ).
 
-    client->view_display( lo_page->stringify( ) ).
+    mo_client->view_display( lo_page->stringify( ) ).
   ENDMETHOD.
 
   METHOD get_data.
@@ -117,8 +118,8 @@ CLASS z2ui5_cl_demo_app_348 IMPLEMENTATION.
       DATA(lo_line) = lo_form->label( wrapping = abap_false
                                 text     = layout->name ).
 
-      lo_line->input( value   = i_client->_bind( <value> )
-                   visible = i_client->_bind( val       = layout->visible
+      lo_line->input( value   = mo_client->_bind( <value> )
+                   visible = mo_client->_bind( val       = layout->visible
                                               tab       = mo_layout_obj->ms_data-t_layout
                                               tab_index = lv_index )
                    enabled = abap_false ).

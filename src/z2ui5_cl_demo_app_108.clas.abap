@@ -9,14 +9,12 @@ CLASS z2ui5_cl_demo_app_108 DEFINITION PUBLIC.
         input2 TYPE string,
         input3 TYPE string,
       END OF screen .
+    DATA mo_client TYPE REF TO z2ui5_if_client.
+
   PROTECTED SECTION.
 
-    METHODS on_rendering
-      IMPORTING
-        client TYPE REF TO z2ui5_if_client.
-    METHODS on_event
-      IMPORTING
-        client TYPE REF TO z2ui5_if_client.
+    METHODS on_rendering.
+    METHODS on_event.
 
   PRIVATE SECTION.
 ENDCLASS.
@@ -25,21 +23,23 @@ CLASS z2ui5_cl_demo_app_108 IMPLEMENTATION.
 
   METHOD z2ui5_if_app~main.
 
+    me->mo_client = client.
+
     IF client->check_on_init( ).
-      on_rendering( client ).
+      on_rendering( ).
     ENDIF.
 
-    on_event( client ).
+    on_event( ).
   ENDMETHOD.
 
   METHOD on_event.
 
-    CASE client->get( )-event.
+    CASE mo_client->get( )-event.
       WHEN `BUTTON_SEND`.
-        client->message_box_display( `success - values send to the server` ).
+        mo_client->message_box_display( `success - values send to the server` ).
       WHEN `BUTTON_CLEAR`.
         CLEAR screen.
-        client->message_toast_display( `View initialized` ).
+        mo_client->message_toast_display( `View initialized` ).
     ENDCASE.
   ENDMETHOD.
 
@@ -49,7 +49,7 @@ CLASS z2ui5_cl_demo_app_108 IMPLEMENTATION.
     DATA(lo_page) = lo_view->shell(
          )->page(
             title           = `abap2UI5 - Side Panel Example`
-            navbuttonpress  = client->_event_nav_app_leave( )
+            navbuttonpress  = mo_client->_event_nav_app_leave( )
               shownavbutton = abap_true ).
 
     lo_page->header_content(
@@ -92,6 +92,6 @@ CLASS z2ui5_cl_demo_app_108 IMPLEMENTATION.
           )->side_panel_item( icon = `sap-icon://flight`
                               text = `Fly abroad` ).
 
-    client->view_display( lo_view->stringify( ) ).
+    mo_client->view_display( lo_view->stringify( ) ).
   ENDMETHOD.
 ENDCLASS.

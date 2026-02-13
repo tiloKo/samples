@@ -10,12 +10,8 @@ CLASS z2ui5_cl_demo_app_021 DEFINITION PUBLIC.
     DATA mo_client            TYPE REF TO z2ui5_if_client.
 
     METHODS set_data.
-    METHODS display_view
-      IMPORTING
-        mo_client TYPE REF TO z2ui5_if_client.
-    METHODS on_event
-      IMPORTING
-        mo_client TYPE REF TO z2ui5_if_client.
+    METHODS display_view.
+    METHODS on_event.
 
   PRIVATE SECTION.
 
@@ -59,11 +55,11 @@ CLASS z2ui5_cl_demo_app_021 IMPLEMENTATION.
     me->mo_client = client.
 
     IF mo_client->check_on_init( ).
-      display_view( mo_client ).
+      display_view( ).
       set_data( ).
     ENDIF.
 
-    on_event( mo_client ).
+    on_event( ).
   ENDMETHOD.
 
   METHOD set_data.

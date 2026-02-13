@@ -3,10 +3,10 @@ CLASS z2ui5_cl_demo_app_175 DEFINITION PUBLIC FINAL CREATE PUBLIC.
 
     INTERFACES z2ui5_if_app.
 
+    DATA mo_client TYPE REF TO z2ui5_if_client.
+
   PROTECTED SECTION.
-    METHODS display_view
-      IMPORTING
-        client TYPE REF TO z2ui5_if_client.
+    METHODS display_view.
   PRIVATE SECTION.
 ENDCLASS.
 
@@ -14,7 +14,9 @@ CLASS z2ui5_cl_demo_app_175 IMPLEMENTATION.
 
   METHOD z2ui5_if_app~main.
 
-    display_view( client ).
+    me->mo_client = client.
+
+    display_view( ).
   ENDMETHOD.
 
   METHOD display_view.
@@ -23,8 +25,8 @@ CLASS z2ui5_cl_demo_app_175 IMPLEMENTATION.
 
     lr_view = lr_view->shell( )->page( id = `page_main`
              title                        = `abap2UI5 - Demo Wizard Control`
-             navbuttonpress               = client->_event_nav_app_leave( )
-             shownavbutton                = client->check_app_prev_stack( ) ).
+             navbuttonpress               = mo_client->_event_nav_app_leave( )
+             shownavbutton                = mo_client->check_app_prev_stack( ) ).
 
     DATA(lr_wizard) = lr_view->wizard( ).
     DATA(lr_wiz_step1) = lr_wizard->wizard_step( title     = `Step1`
@@ -43,6 +45,6 @@ CLASS z2ui5_cl_demo_app_175 IMPLEMENTATION.
 
     lr_wiz_step4->message_strip( text = `STEP4` ).
 
-    client->view_display( lr_view->stringify( ) ).
+    mo_client->view_display( lr_view->stringify( ) ).
   ENDMETHOD.
 ENDCLASS.

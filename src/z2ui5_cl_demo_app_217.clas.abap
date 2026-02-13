@@ -3,11 +3,11 @@ CLASS z2ui5_cl_demo_app_217 DEFINITION PUBLIC.
 
     INTERFACES z2ui5_if_app.
 
+    DATA mo_client TYPE REF TO z2ui5_if_client.
+
   PROTECTED SECTION.
 
-    METHODS display_view
-      IMPORTING
-        client TYPE REF TO z2ui5_if_client.
+    METHODS display_view.
 
   PRIVATE SECTION.
 ENDCLASS.
@@ -20,8 +20,8 @@ CLASS z2ui5_cl_demo_app_217 IMPLEMENTATION.
     DATA(lo_page) = lo_view->shell(
          )->page(
             title          = `abap2UI5 - Sample: Placing a Title in OverflowToolbar/Toolbar`
-            navbuttonpress = client->_event_nav_app_leave( )
-            shownavbutton  = client->check_app_prev_stack( ) ).
+            navbuttonpress = mo_client->_event_nav_app_leave( )
+            shownavbutton  = mo_client->check_app_prev_stack( ) ).
 
     DATA(lo_layout) = lo_page->overflow_toolbar( design = `Transparent`
                                            height = `3rem`
@@ -33,13 +33,15 @@ CLASS z2ui5_cl_demo_app_217 IMPLEMENTATION.
                           )->button( icon = `sap-icon://group-2`
                           )->button( icon = `sap-icon://action-settings` ).
 
-    client->view_display( lo_view->stringify( ) ).
+    mo_client->view_display( lo_view->stringify( ) ).
   ENDMETHOD.
 
   METHOD z2ui5_if_app~main.
 
+    me->mo_client = client.
+
     IF client->check_on_init( ).
-      display_view( client ).
+      display_view( ).
     ENDIF.
 
   ENDMETHOD.

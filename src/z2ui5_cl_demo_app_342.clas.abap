@@ -16,10 +16,12 @@ CLASS z2ui5_cl_demo_app_342 DEFINITION PUBLIC.
       IMPORTING
         !lo_table TYPE string.
 
-  PROTECTED SECTION.
-    METHODS on_event    IMPORTING !client TYPE REF TO z2ui5_if_client.
+    DATA mo_client TYPE REF TO z2ui5_if_client.
 
-    METHODS render_main IMPORTING !client TYPE REF TO z2ui5_if_client.
+  PROTECTED SECTION.
+    METHODS on_event.
+
+    METHODS render_main.
     METHODS get_data.
 
   PRIVATE SECTION.
@@ -76,9 +78,9 @@ CLASS z2ui5_cl_demo_app_342 IMPLEMENTATION.
 
   METHOD on_event.
 
-    IF client->check_on_event( `SELECTION_CHANGE` ).
+    IF mo_client->check_on_event( `SELECTION_CHANGE` ).
 
-      client->nav_app_call( z2ui5_cl_demo_app_340=>factory(
+      mo_client->nav_app_call( z2ui5_cl_demo_app_340=>factory(
                               io_table  = mt_data
                               io_layout = mo_lay ) ).
     ENDIF.
@@ -103,15 +105,15 @@ CLASS z2ui5_cl_demo_app_342 IMPLEMENTATION.
 
     DATA(lo_table) = lo_page->table( width           = `auto`
                                mode            = `SingleSelectLeft`
-                               selectionchange = client->_event( `SELECTION_CHANGE` )
-                               items           = client->_bind_edit( <lo_table> ) ).
+                               selectionchange = mo_client->_event( `SELECTION_CHANGE` )
+                               items           = mo_client->_bind_edit( <lo_table> ) ).
 
     DATA(lo_columns) = lo_table->columns( ).
 
     LOOP AT mo_lay->ms_data-t_layout REFERENCE INTO DATA(layout).
       DATA(lv_index) = sy-tabix.
 
-      lo_columns->column( visible = client->_bind( val       = layout->visible
+      lo_columns->column( visible = mo_client->_bind( val       = layout->visible
                                                 tab       = mo_lay->ms_data-t_layout
                                                 tab_index = lv_index )
         )->text( layout->name ).
@@ -135,7 +137,7 @@ CLASS z2ui5_cl_demo_app_342 IMPLEMENTATION.
 
     IF mo_parent_view IS INITIAL.
 
-      client->view_display( lo_page->stringify( ) ).
+      mo_client->view_display( lo_page->stringify( ) ).
 
     ELSE.
 
@@ -151,12 +153,14 @@ CLASS z2ui5_cl_demo_app_342 IMPLEMENTATION.
 
   METHOD z2ui5_if_app~main.
 
+    me->mo_client = client.
+
     IF mv_init IS INITIAL.
       mv_init = abap_true.
 
       get_data( ).
 
-      render_main( client ).
+      render_main( ).
 
     ENDIF.
 
@@ -167,7 +171,7 @@ CLASS z2ui5_cl_demo_app_342 IMPLEMENTATION.
       client->message_toast_display( `ERROR - mo_layout->mr_data->* ne mt_table->*` ).
     ENDIF.
 
-    on_event( client ).
+    on_event( ).
   ENDMETHOD.
 
   METHOD get_data.

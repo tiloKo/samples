@@ -24,12 +24,10 @@ CLASS z2ui5_cl_demo_app_176 DEFINITION PUBLIC.
     DATA mt_layout TYPE ty_t_layout.
     DATA mt_data   TYPE ty_t_data.
 
-    METHODS main_view
-      IMPORTING
-        i_client TYPE REF TO z2ui5_if_client.
-    METHODS nest_view
-      IMPORTING
-        i_client TYPE REF TO z2ui5_if_client.
+    METHODS main_view.
+    METHODS nest_view.
+
+    DATA mo_client TYPE REF TO z2ui5_if_client.
 
   PROTECTED SECTION.
   PRIVATE SECTION.
@@ -45,15 +43,15 @@ CLASS z2ui5_cl_demo_app_176 IMPLEMENTATION.
         )->page(
                 title          = `Main View`
                 id             = `test`
-                navbuttonpress = i_client->_event_nav_app_leave( )
-                shownavbutton  = i_client->check_app_prev_stack( ) ).
+                navbuttonpress = mo_client->_event_nav_app_leave( )
+                shownavbutton  = mo_client->check_app_prev_stack( ) ).
 
-    i_client->view_display( lo_view->stringify( ) ).
+    mo_client->view_display( lo_view->stringify( ) ).
   ENDMETHOD.
 
   METHOD nest_view.
 
-    i_client->_bind( mt_layout ).
+    mo_client->_bind( mt_layout ).
 
     mt_data = VALUE #( ( name = `Theo` date = `01.01.2000` age = `5` )
                        ( name = `Lore` date = `01.01.2000` age = `1` ) ).
@@ -65,7 +63,7 @@ CLASS z2ui5_cl_demo_app_176 IMPLEMENTATION.
     DATA(lo_view_nested) = z2ui5_cl_xml_view=>factory( ).
 
     lo_view_nested->shell( )->page( `Nested View`
-      )->table( items = i_client->_bind( mt_data )
+      )->table( items = mo_client->_bind( mt_data )
       )->columns(
         )->template_repeat( list = `{template>/MT_LAYOUT}`
                             var  = `LO`
@@ -79,14 +77,16 @@ CLASS z2ui5_cl_demo_app_176 IMPLEMENTATION.
                                   var  = `LO2`
                 )->object_identifier( text = `{= '{' + ${LO2>FNAME} + '}' }` ).
 
-    i_client->nest_view_display( val           = lo_view_nested->stringify( )
+    mo_client->nest_view_display( val           = lo_view_nested->stringify( )
                                  id            = `test`
                                  method_insert = `addContent` ).
   ENDMETHOD.
 
   METHOD z2ui5_if_app~main.
 
-    main_view( client ).
-    nest_view( client ).
+    me->mo_client = client.
+
+    main_view( ).
+    nest_view( ).
   ENDMETHOD.
 ENDCLASS.

@@ -4,13 +4,11 @@ CLASS z2ui5_cl_demo_app_352 DEFINITION PUBLIC.
     INTERFACES z2ui5_if_app.
     DATA mv_input TYPE string.
 
-    METHODS display_view
-      IMPORTING
-        client TYPE REF TO z2ui5_if_client.
+    METHODS display_view.
 
-    METHODS on_event
-      IMPORTING
-        client TYPE REF TO z2ui5_if_client.
+    METHODS on_event.
+
+    DATA mo_client TYPE REF TO z2ui5_if_client.
 
   PROTECTED SECTION.
   PRIVATE SECTION.
@@ -20,10 +18,12 @@ CLASS z2ui5_cl_demo_app_352 IMPLEMENTATION.
 
   METHOD z2ui5_if_app~main.
 
+    me->mo_client = client.
+
     IF client->check_on_init( ).
-      display_view( client ).
+      display_view( ).
     ENDIF.
-    on_event( client ).
+    on_event( ).
   ENDMETHOD.
 
   METHOD display_view.
@@ -40,26 +40,26 @@ CLASS z2ui5_cl_demo_app_352 IMPLEMENTATION.
 
     DATA(lo_page) = lo_view->shell(
              )->page( title          = `abap2UI5 - Softkeyboard on/off`
-                      navbuttonpress = client->_event_nav_app_leave( )
-                      shownavbutton  = client->check_app_prev_stack( )
+                      navbuttonpress = mo_client->_event_nav_app_leave( )
+                      shownavbutton  = mo_client->check_app_prev_stack( )
                       )->_z2ui5( )->focus( focusid = `ZINPUT`
       )->simple_form( editable = abap_true
                  )->content( `form`
                      )->title( `Keyboard on/off`
                      )->label( `Input`
                      )->input( id               = `ZINPUT`
-                               value            = client->_bind_edit( mv_input )
+                               value            = mo_client->_bind_edit( mv_input )
                                showvaluehelp    = abap_true
-                               valuehelprequest = client->_event( `CALL_KEYBOARD` )
+                               valuehelprequest = mo_client->_event( `CALL_KEYBOARD` )
                                valuehelpiconsrc = `sap-icon://keyboard-and-mouse` ).
 
-    client->view_display( lo_view->stringify( ) ).
+    mo_client->view_display( lo_view->stringify( ) ).
   ENDMETHOD.
 
   METHOD on_event.
 
-    IF client->check_on_event( `CALL_KEYBOARD` ).
-      client->follow_up_action( `z2ui5.afterBE("ZINPUT", "none");` ).
+    IF mo_client->check_on_event( `CALL_KEYBOARD` ).
+      mo_client->follow_up_action( `z2ui5.afterBE("ZINPUT", "none");` ).
     ENDIF.
   ENDMETHOD.
 ENDCLASS.

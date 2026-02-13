@@ -10,15 +10,13 @@ CLASS z2ui5_cl_demo_app_041 DEFINITION PUBLIC.
         step_val_02 TYPE string VALUE `10`,
       END OF screen.
 
+    DATA mo_client TYPE REF TO z2ui5_if_client.
+
   PROTECTED SECTION.
 
-    METHODS display_view
-      IMPORTING
-        client TYPE REF TO z2ui5_if_client.
+    METHODS display_view.
 
-    METHODS on_event
-      IMPORTING
-        client TYPE REF TO z2ui5_if_client.
+    METHODS on_event.
 
   PRIVATE SECTION.
 ENDCLASS.
@@ -31,41 +29,43 @@ CLASS z2ui5_cl_demo_app_041 IMPLEMENTATION.
     DATA(lo_page) = lo_view->shell(
          )->page(
             title          = `abap2UI5 - Step Input Example`
-            navbuttonpress = client->_event_nav_app_leave( )
-            shownavbutton  = client->check_app_prev_stack( ) ).
+            navbuttonpress = mo_client->_event_nav_app_leave( )
+            shownavbutton  = mo_client->check_app_prev_stack( ) ).
 
     DATA(lo_layout) = lo_page->vertical_layout( class = `sapUiContentPadding`
                                           width = `100%` ).
     lo_layout->label( `StepInput`
         )->step_input(
-            value = client->_bind_edit( screen-step_val_01 )
+            value = mo_client->_bind_edit( screen-step_val_01 )
             step  = `2`
             min   = `0`
             max   = `20`
         )->step_input(
-            value = client->_bind_edit( screen-step_val_02 )
+            value = mo_client->_bind_edit( screen-step_val_02 )
             step  = `10`
             min   = `0`
             max   = `100`
         )->button( text  = `OK`
-                   press = client->_event( `POST` ) ).
+                   press = mo_client->_event( `POST` ) ).
 
-    client->view_display( lo_view->stringify( ) ).
+    mo_client->view_display( lo_view->stringify( ) ).
   ENDMETHOD.
 
   METHOD on_event.
 
-    IF client->check_on_event( `POST` ).
-      client->message_box_display( `success - values send to the server` ).
+    IF mo_client->check_on_event( `POST` ).
+      mo_client->message_box_display( `success - values send to the server` ).
     ENDIF.
   ENDMETHOD.
 
   METHOD z2ui5_if_app~main.
 
+    me->mo_client = client.
+
     IF client->check_on_init( ).
-      display_view( client ).
+      display_view( ).
     ENDIF.
 
-    on_event( client ).
+    on_event( ).
   ENDMETHOD.
 ENDCLASS.

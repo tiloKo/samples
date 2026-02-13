@@ -22,14 +22,12 @@ CLASS z2ui5_cl_demo_app_134 DEFINITION PUBLIC.
 
     DATA mt_scroll TYPE z2ui5_if_types=>ty_t_name_value.
 
-  PROTECTED SECTION.
-    METHODS display_view
-      IMPORTING
-        client TYPE REF TO z2ui5_if_client.
+    DATA mo_client TYPE REF TO z2ui5_if_client.
 
-    METHODS init
-      IMPORTING
-        client TYPE REF TO z2ui5_if_client.
+  PROTECTED SECTION.
+    METHODS display_view.
+
+    METHODS init.
 
   PRIVATE SECTION.
 ENDCLASS.
@@ -47,16 +45,16 @@ CLASS z2ui5_cl_demo_app_134 IMPLEMENTATION.
     DATA(lo_page) = lo_view->page(
         id             = `id_page`
         title          = `abap2ui5 - Scrolling (use Chrome to avoid incompatibilities)`
-        navbuttonpress = client->_event_nav_app_leave( )
-        shownavbutton  = client->check_app_prev_stack( ) ).
+        navbuttonpress = mo_client->_event_nav_app_leave( )
+        shownavbutton  = mo_client->check_app_prev_stack( ) ).
 
     lo_page->_z2ui5( )->scrolling(
-          setupdate = client->_bind_edit( mv_scrollupdate )
-          items     = client->_bind_edit( mt_scroll ) ).
+          setupdate = mo_client->_bind_edit( mv_scrollupdate )
+          items     = mo_client->_bind_edit( mt_scroll ) ).
 
     DATA(lo_tab) = lo_page->table( sticky     = `ColumnHeaders,HeaderToolbar`
                              headertext = `Table with some entries`
-                             items      = client->_bind( mt_tab ) ).
+                             items      = mo_client->_bind( mt_tab ) ).
 
     lo_tab->columns(
         )->column( )->text( `Title` )->get_parent(
@@ -72,15 +70,15 @@ CLASS z2ui5_cl_demo_app_134 IMPLEMENTATION.
 
     lo_page->footer( )->overflow_toolbar(
          )->button( text  = `Scroll Top`
-                    press = client->_event( `BUTTON_SCROLL_TOP` )
+                    press = mo_client->_event( `BUTTON_SCROLL_TOP` )
          )->button( text  = `Scroll 500 up`
-                    press = client->_event( `BUTTON_SCROLL_UP` )
+                    press = mo_client->_event( `BUTTON_SCROLL_UP` )
          )->button( text  = `Scroll 500 down`
-                    press = client->_event( `BUTTON_SCROLL_DOWN` )
+                    press = mo_client->_event( `BUTTON_SCROLL_DOWN` )
          )->button( text  = `Scroll Bottom`
-                    press = client->_event( `BUTTON_SCROLL_BOTTOM` ) ).
+                    press = mo_client->_event( `BUTTON_SCROLL_BOTTOM` ) ).
 
-    client->view_display( lo_view->stringify( ) ).
+    mo_client->view_display( lo_view->stringify( ) ).
   ENDMETHOD.
 
   METHOD init.
@@ -91,13 +89,15 @@ CLASS z2ui5_cl_demo_app_134 IMPLEMENTATION.
     mv_selend = `7`.
 
     INSERT VALUE #( n = `id_page` ) INTO TABLE mt_scroll.
-    display_view( client ).
+    display_view( ).
   ENDMETHOD.
 
   METHOD z2ui5_if_app~main.
 
+    me->mo_client = client.
+
     IF client->check_on_init( ).
-      init( client ).
+      init( ).
       RETURN.
     ENDIF.
 

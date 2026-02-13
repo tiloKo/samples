@@ -5,9 +5,9 @@ CLASS z2ui5_cl_demo_app_350 DEFINITION PUBLIC.
     DATA mv_text TYPE string VALUE `call booking mask`.
     DATA mv_varkey TYPE char120.
 
-    METHODS initialize_view2
-      IMPORTING
-        client TYPE REF TO z2ui5_if_client.
+    METHODS initialize_view2.
+
+    DATA mo_client TYPE REF TO z2ui5_if_client.
 
   PROTECTED SECTION.
   PRIVATE SECTION.
@@ -17,6 +17,8 @@ ENDCLASS.
 CLASS z2ui5_cl_demo_app_350 IMPLEMENTATION.
 
   METHOD z2ui5_if_app~main.
+
+    me->mo_client = client.
 
     IF view_id IS INITIAL OR view_id = 1.
       view_id = 1.
@@ -71,7 +73,7 @@ CLASS z2ui5_cl_demo_app_350 IMPLEMENTATION.
               client->nav_app_leave( ).
             ELSE.
               client->set_session_stateful( ).
-              initialize_view2( client ).
+              initialize_view2( ).
             ENDIF.
             RETURN.
           ENDIF.
@@ -114,18 +116,18 @@ CLASS z2ui5_cl_demo_app_350 IMPLEMENTATION.
     DATA(lo_view) = z2ui5_cl_xml_view=>factory( ).
     DATA(lo_page) = lo_view->shell( )->page(
       title          = `Stateful Application with lock`
-      navbuttonpress = client->_event_nav_app_leave( )
-      shownavbutton  = client->check_app_prev_stack( ) ).
+      navbuttonpress = mo_client->_event_nav_app_leave( )
+      shownavbutton  = mo_client->check_app_prev_stack( ) ).
     DATA(lo_vbox) = lo_page->vbox( ).
     DATA(lo_hbox) = lo_vbox->hbox( alignitems = `Center` ).
     lo_hbox->title(
       text = `Current Lock Value in Table ZTEST` ).
     lo_hbox->input(
       editable = abap_false
-      value    = client->_bind_edit( mv_varkey ) ).
+      value    = mo_client->_bind_edit( mv_varkey ) ).
     lo_hbox->button(
       text  = `Next Lock View`
-      press = client->_event( `NEXT_LOCK` ) ).
-    client->view_display( lo_view->stringify( ) ).
+      press = mo_client->_event( `NEXT_LOCK` ) ).
+    mo_client->view_display( lo_view->stringify( ) ).
   ENDMETHOD.
 ENDCLASS.

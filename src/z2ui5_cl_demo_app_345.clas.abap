@@ -9,9 +9,9 @@ CLASS z2ui5_cl_demo_app_345 DEFINITION PUBLIC.
 
     METHODS get_data.
 
-    METHODS render_main
-      IMPORTING
-        !client TYPE REF TO z2ui5_if_client.
+    METHODS render_main.
+
+    DATA mo_client TYPE REF TO z2ui5_if_client.
 
   PROTECTED SECTION.
 
@@ -19,7 +19,6 @@ CLASS z2ui5_cl_demo_app_345 DEFINITION PUBLIC.
     METHODS xml_table
       IMPORTING
         i_page   TYPE REF TO z2ui5_cl_xml_view
-        i_client TYPE REF TO z2ui5_if_client
         i_data   TYPE REF TO data
         i_layout TYPE REF TO z2ui5_cl_demo_app_333.
 
@@ -91,19 +90,18 @@ CLASS z2ui5_cl_demo_app_345 IMPLEMENTATION.
 
     DATA(lo_view) = z2ui5_cl_xml_view=>factory( ).
     DATA(lo_page) = lo_view->shell( )->page( title          = `RTTI IV`
-                                                                navbuttonpress = client->_event_nav_app_leave( )
-                                                                shownavbutton  = client->check_app_prev_stack( ) ).
+                                                                navbuttonpress = mo_client->_event_nav_app_leave( )
+                                                                shownavbutton  = mo_client->check_app_prev_stack( ) ).
 
     lo_page->button( text  = `CALL Next App`
-                  press = client->_event( `GO` )
+                  press = mo_client->_event( `GO` )
                   type  = `Success` ).
 
     xml_table( i_page = lo_page
-      i_client        = client
       i_data          = mt_data1
       i_layout        = mo_layout_obj1 ).
 
-    client->view_display( lo_view->stringify( ) ).
+    mo_client->view_display( lo_view->stringify( ) ).
   ENDMETHOD.
 
   METHOD xml_table.
@@ -111,14 +109,14 @@ CLASS z2ui5_cl_demo_app_345 IMPLEMENTATION.
     ASSIGN i_data->* TO FIELD-SYMBOL(<data>).
 
     DATA(lo_table) = i_page->table( width = `auto`
-                                 items = i_client->_bind( <data> ) ).
+                                 items = mo_client->_bind( <data> ) ).
 
     DATA(lo_columns) = lo_table->columns( ).
 
     LOOP AT i_layout->ms_data-t_layout REFERENCE INTO DATA(layout).
       DATA(lv_index) = sy-tabix.
 
-      lo_columns->column( visible = i_client->_bind( val       = layout->visible
+      lo_columns->column( visible = mo_client->_bind( val       = layout->visible
                                                   tab       = i_layout->ms_data-t_layout
                                                   tab_index = lv_index )
         )->text( layout->name ).
@@ -141,9 +139,11 @@ CLASS z2ui5_cl_demo_app_345 IMPLEMENTATION.
 
   METHOD z2ui5_if_app~main.
 
+    me->mo_client = client.
+
     IF client->check_on_init( ).
       get_data( ).
-      render_main( client ).
+      render_main( ).
     ENDIF.
 
     IF client->check_on_event( `GO` ).
@@ -153,7 +153,7 @@ CLASS z2ui5_cl_demo_app_345 IMPLEMENTATION.
 
     IF client->get( )-check_on_navigated = abap_true
         AND client->check_on_init( )          = abap_false.
-      render_main( client ).
+      render_main( ).
     ENDIF.
 
     IF mo_layout_obj1->mr_data IS NOT BOUND.

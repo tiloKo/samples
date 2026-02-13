@@ -44,21 +44,15 @@ CLASS z2ui5_cl_demo_app_009 DEFINITION PUBLIC.
     DATA mt_employees TYPE STANDARD TABLE OF s_employee WITH EMPTY KEY.
 
     DATA mv_view_popup TYPE string.
-    METHODS popup_f4_table
-      IMPORTING
-        client TYPE REF TO z2ui5_if_client.
-    METHODS popup_f4_table_custom
-      IMPORTING
-        client TYPE REF TO z2ui5_if_client.
+    METHODS popup_f4_table.
+    METHODS popup_f4_table_custom.
+    DATA mo_client TYPE REF TO z2ui5_if_client.
+
   PROTECTED SECTION.
 
-    METHODS on_rendering
-      IMPORTING
-        client TYPE REF TO z2ui5_if_client.
+    METHODS on_rendering.
 
-    METHODS on_event
-      IMPORTING
-        client TYPE REF TO z2ui5_if_client.
+    METHODS on_event.
     METHODS on_init.
 
   PRIVATE SECTION.
@@ -73,7 +67,7 @@ CLASS z2ui5_cl_demo_app_009 IMPLEMENTATION.
     lo_popup->dialog( `abap2UI5 - F4 Value Help`
       )->table(
             mode  = `SingleSelectLeft`
-            items = client->_bind_edit( mt_suggestion_sel )
+            items = mo_client->_bind_edit( mt_suggestion_sel )
         )->columns(
             )->column( `20rem`
                 )->text( `Color` )->get_parent(
@@ -89,9 +83,9 @@ CLASS z2ui5_cl_demo_app_009 IMPLEMENTATION.
       )->buttons(
             )->button(
                 text  = `continue`
-                press = client->_event( `POPUP_TABLE_F4_CONTINUE` )
+                press = mo_client->_event( `POPUP_TABLE_F4_CONTINUE` )
                 type  = `Emphasized` ).
-    client->popup_display( lo_popup->stringify( ) ).
+    mo_client->popup_display( lo_popup->stringify( ) ).
   ENDMETHOD.
 
   METHOD popup_f4_table_custom.
@@ -103,8 +97,8 @@ CLASS z2ui5_cl_demo_app_009 IMPLEMENTATION.
     lo_popup2->simple_form(
         )->label( `Location`
         )->input(
-                value           = client->_bind_edit( screen-city )
-                suggestionitems = client->_bind( mt_suggestion_city )
+                value           = mo_client->_bind_edit( screen-city )
+                suggestionitems = mo_client->_bind( mt_suggestion_city )
                 showsuggestion  = abap_true )->get(
             )->suggestion_items( )->get(
                 )->list_item(
@@ -113,12 +107,12 @@ CLASS z2ui5_cl_demo_app_009 IMPLEMENTATION.
         )->get_parent( )->get_parent(
         )->button(
             text  = `search...`
-            press = client->_event( `SEARCH` ) ).
+            press = mo_client->_event( `SEARCH` ) ).
 
     DATA(lo_tab) = lo_popup2->table(
         headertext = `Employees`
         mode       = `SingleSelectLeft`
-        items      = client->_bind_edit( mt_employees_sel ) ).
+        items      = mo_client->_bind_edit( mt_employees_sel ) ).
 
     lo_tab->columns(
         )->column( `10rem`
@@ -140,59 +134,61 @@ CLASS z2ui5_cl_demo_app_009 IMPLEMENTATION.
     lo_popup2->buttons(
                 )->button(
                     text  = `continue`
-                    press = client->_event( `POPUP_TABLE_F4_CUSTOM_CONTINUE` )
+                    press = mo_client->_event( `POPUP_TABLE_F4_CUSTOM_CONTINUE` )
                     type  = `Emphasized` ).
-    client->popup_display( lo_popup2->stringify( ) ).
+    mo_client->popup_display( lo_popup2->stringify( ) ).
   ENDMETHOD.
 
   METHOD z2ui5_if_app~main.
+
+    me->mo_client = client.
 
     CLEAR mv_view_popup.
 
     IF client->check_on_init( ).
       on_init( ).
     ENDIF.
-    on_event( client ).
+    on_event( ).
 
-    on_rendering( client ).
+    on_rendering( ).
   ENDMETHOD.
 
   METHOD on_event.
 
-    CASE client->get( )-event.
+    CASE mo_client->get( )-event.
       WHEN `POPUP_TABLE_F4`.
         mt_suggestion_sel = mt_suggestion.
-        popup_f4_table( client ).
+        popup_f4_table( ).
       WHEN `POPUP_TABLE_F4_CUSTOM`.
         mt_employees_sel = VALUE #( ).
         mt_employees_sel = VALUE #( ).
-        popup_f4_table_custom( client ).
+        popup_f4_table_custom( ).
       WHEN `SEARCH`.
         mt_employees_sel = mt_employees.
         IF screen-city IS NOT INITIAL.
           DELETE mt_employees_sel WHERE city <> screen-city.
         ENDIF.
-        popup_f4_table_custom( client ).
+        popup_f4_table_custom( ).
       WHEN `POPUP_TABLE_F4_CUSTOM_CONTINUE`.
         DELETE mt_employees_sel WHERE selkz = abap_false.
         IF lines( mt_employees_sel ) = 1.
           screen-name = mt_employees_sel[ 1 ]-name.
           screen-lastname = mt_employees_sel[ 1 ]-lastname.
-          client->message_toast_display( `f4 value selected` ).
-          client->popup_destroy( ).
+          mo_client->message_toast_display( `f4 value selected` ).
+          mo_client->popup_destroy( ).
         ENDIF.
       WHEN `POPUP_TABLE_F4_CONTINUE`.
         DELETE mt_suggestion_sel WHERE selkz = abap_false.
         IF lines( mt_suggestion_sel ) = 1.
           screen-color_02 = mt_suggestion_sel[ 1 ]-value.
-          client->message_toast_display( `f4 value selected` ).
-          client->popup_destroy( ).
+          mo_client->message_toast_display( `f4 value selected` ).
+          mo_client->popup_destroy( ).
         ENDIF.
       WHEN `BUTTON_SEND`.
-        client->message_box_display( `success - values send to the server` ).
+        mo_client->message_box_display( `success - values send to the server` ).
       WHEN `BUTTON_CLEAR`.
         CLEAR screen.
-        client->message_box_display( `View initialized` ).
+        mo_client->message_box_display( `View initialized` ).
     ENDCASE.
   ENDMETHOD.
 
@@ -273,8 +269,8 @@ CLASS z2ui5_cl_demo_app_009 IMPLEMENTATION.
     DATA(lo_page) = lo_view->shell(
         )->page(
             title          = `abap2UI5 - Value Help Examples`
-            navbuttonpress = client->_event_nav_app_leave( )
-            shownavbutton  = client->check_app_prev_stack( ) ).
+            navbuttonpress = mo_client->_event_nav_app_leave( )
+            shownavbutton  = mo_client->check_app_prev_stack( ) ).
 
     DATA(lo_form) = lo_page->grid( `L7 M7 S7`
         )->content( `layout`
@@ -283,9 +279,9 @@ CLASS z2ui5_cl_demo_app_009 IMPLEMENTATION.
 
     lo_form->label( `Input with sugestion items`
         )->input(
-            value           = client->_bind_edit( screen-color_01 )
+            value           = mo_client->_bind_edit( screen-color_01 )
             placeholder     = `fill in your favorite colour`
-            suggestionitems = client->_bind( mt_suggestion )
+            suggestionitems = mo_client->_bind( mt_suggestion )
             showsuggestion  = abap_true )->get(
             )->suggestion_items( )->get(
                 )->list_item(
@@ -294,53 +290,53 @@ CLASS z2ui5_cl_demo_app_009 IMPLEMENTATION.
 
     lo_form->label( `Input only numbers allowed`
         )->input(
-            value       = client->_bind_edit( screen-quantity )
+            value       = mo_client->_bind_edit( screen-quantity )
             type        = `Number`
             placeholder = `quantity` ).
 
     lo_form->label( `Input with F4`
         )->input(
-            value            = client->_bind_edit( screen-color_02 )
+            value            = mo_client->_bind_edit( screen-color_02 )
             placeholder      = `fill in your favorite colour`
             showvaluehelp    = abap_true
-            valuehelprequest = client->_event( `POPUP_TABLE_F4` ) ).
+            valuehelprequest = mo_client->_event( `POPUP_TABLE_F4` ) ).
 
     lo_form->label( `Custom F4 Popup`
         )->input(
-            value            = client->_bind_edit( screen-name )
+            value            = mo_client->_bind_edit( screen-name )
             placeholder      = `name`
             showvaluehelp    = abap_true
-            valuehelprequest = client->_event( `POPUP_TABLE_F4_CUSTOM` )
+            valuehelprequest = mo_client->_event( `POPUP_TABLE_F4_CUSTOM` )
         )->input(
-            value            = client->_bind_edit( screen-lastname )
+            value            = mo_client->_bind_edit( screen-lastname )
             placeholder      = `lastname`
             showvaluehelp    = abap_true
-            valuehelprequest = client->_event( `POPUP_TABLE_F4_CUSTOM` ) ).
+            valuehelprequest = mo_client->_event( `POPUP_TABLE_F4_CUSTOM` ) ).
 
     lo_page->footer(
         )->overflow_toolbar(
             )->toolbar_spacer(
             )->button(
                 text    = `Clear`
-                press   = client->_event( `BUTTON_CLEAR` )
+                press   = mo_client->_event( `BUTTON_CLEAR` )
                 type    = `Reject`
                 enabled = abap_false
                 icon    = `sap-icon://delete`
             )->button(
                 text    = `Send to Server`
-                press   = client->_event( `BUTTON_SEND` )
+                press   = mo_client->_event( `BUTTON_SEND` )
                 enabled = abap_false
                 type    = `Success` ).
 
     CASE mv_view_popup.
       WHEN `POPUP_TABLE_F4`.
 
-        popup_f4_table( client ).
+        popup_f4_table( ).
       WHEN `POPUP_TABLE_F4_CUSTOM`.
 
-        popup_f4_table_custom( client ).
+        popup_f4_table_custom( ).
     ENDCASE.
 
-    client->view_display( lo_view->stringify( ) ).
+    mo_client->view_display( lo_view->stringify( ) ).
   ENDMETHOD.
 ENDCLASS.

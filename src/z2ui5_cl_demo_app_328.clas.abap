@@ -8,9 +8,9 @@ CLASS z2ui5_cl_demo_app_328 DEFINITION PUBLIC.
 
     METHODS get_data.
 
-    METHODS view_display
-      IMPORTING
-        !client TYPE REF TO z2ui5_if_client.
+    METHODS view_display.
+
+    DATA mo_client TYPE REF TO z2ui5_if_client.
 
   PROTECTED SECTION.
 
@@ -21,13 +21,15 @@ CLASS z2ui5_cl_demo_app_328 IMPLEMENTATION.
 
   METHOD z2ui5_if_app~main.
 
+    me->mo_client = client.
+
     FIELD-SYMBOLS <line> TYPE any.
     FIELD-SYMBOLS: <tab> TYPE ANY TABLE.
 
     IF client->check_on_init( ).
       get_data( ).
       mo_table_obj = z2ui5_cl_demo_app_329=>factory( mt_table ).
-      view_display( client ).
+      view_display( ).
     ENDIF.
 
     CASE client->get( )-event.
@@ -57,7 +59,7 @@ CLASS z2ui5_cl_demo_app_328 IMPLEMENTATION.
 
           get_data( ).
           mo_table_obj = z2ui5_cl_demo_app_329=>factory( mt_table ).
-          view_display( client ).
+          view_display( ).
 
           ASSIGN mt_table->* TO FIELD-SYMBOL(<table>).
           ASSIGN mo_table_obj->mr_data->* TO FIELD-SYMBOL(<val>).
@@ -78,18 +80,18 @@ CLASS z2ui5_cl_demo_app_328 IMPLEMENTATION.
 
     DATA(lo_view) = z2ui5_cl_xml_view=>factory( ).
     DATA(lo_page) = lo_view->shell( )->page( title          = `RTTI IV`
-                                                                navbuttonpress = client->_event_nav_app_leave( )
-                                                                shownavbutton  = client->check_app_prev_stack( ) ).
+                                                                navbuttonpress = mo_client->_event_nav_app_leave( )
+                                                                shownavbutton  = mo_client->check_app_prev_stack( ) ).
 
     lo_page->button( text  = `GO`
-                  press = client->_event( `GO` )
+                  press = mo_client->_event( `GO` )
                   type  = `Success` ).
 
     ASSIGN mt_table->* TO FIELD-SYMBOL(<table>).
     lo_page->table( headertext      = `Table`
                  mode            = `MultiSelect`
-                 items           = client->_bind_edit( <table> )
-                 selectionchange = client->_event( `SELECTION_CHANGE` )
+                 items           = mo_client->_bind_edit( <table> )
+                 selectionchange = mo_client->_event( `SELECTION_CHANGE` )
               )->columns(
                   )->column( )->text( `id `
               )->get_parent( )->get_parent(
@@ -98,7 +100,7 @@ CLASS z2ui5_cl_demo_app_328 IMPLEMENTATION.
                       )->cells(
                           )->text( `{ID}` ).
 
-    client->view_display( lo_view->stringify( ) ).
+    mo_client->view_display( lo_view->stringify( ) ).
   ENDMETHOD.
 
   METHOD get_data.

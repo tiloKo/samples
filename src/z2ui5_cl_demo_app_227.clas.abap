@@ -3,11 +3,11 @@ CLASS z2ui5_cl_demo_app_227 DEFINITION PUBLIC.
 
     INTERFACES z2ui5_if_app.
 
+    DATA mo_client TYPE REF TO z2ui5_if_client.
+
   PROTECTED SECTION.
 
-    METHODS display_view
-      IMPORTING
-        client TYPE REF TO z2ui5_if_client.
+    METHODS display_view.
 
   PRIVATE SECTION.
 ENDCLASS.
@@ -19,8 +19,8 @@ CLASS z2ui5_cl_demo_app_227 IMPLEMENTATION.
     DATA(lo_page_01) = z2ui5_cl_xml_view=>factory( )->shell(
          )->page(
             title          = `abap2UI5 - Sample: Page, Toolbar and Bar`
-            navbuttonpress = client->_event_nav_app_leave( )
-            shownavbutton  = client->check_app_prev_stack( ) ).
+            navbuttonpress = mo_client->_event_nav_app_leave( )
+            shownavbutton  = mo_client->check_app_prev_stack( ) ).
 
     DATA(lo_page_02) = lo_page_01->page( title         = `Title`
                                    class         = `sapUiContentPadding sapUiResponsivePadding--header sapUiResponsivePadding--subHeader sapUiResponsivePadding--content sapUiResponsivePadding--footer`
@@ -51,13 +51,15 @@ CLASS z2ui5_cl_demo_app_227 IMPLEMENTATION.
                                           )->button( text = `Delete`
                                                      type = `Delete` ).
 
-    client->view_display( lo_page_02->stringify( ) ).
+    mo_client->view_display( lo_page_02->stringify( ) ).
   ENDMETHOD.
 
   METHOD z2ui5_if_app~main.
 
+    me->mo_client = client.
+
     IF client->check_on_init( ).
-      display_view( client ).
+      display_view( ).
     ENDIF.
 
   ENDMETHOD.

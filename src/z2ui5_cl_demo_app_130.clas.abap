@@ -110,9 +110,7 @@ CLASS z2ui5_cl_demo_app_130 DEFINITION PUBLIC.
 
     METHODS get_variants.
 
-    METHODS render_popup_varaint
-      IMPORTING
-        mo_client TYPE REF TO z2ui5_if_client.
+    METHODS render_popup_varaint.
 
     METHODS popup_copy_save.
 
@@ -599,7 +597,7 @@ CLASS z2ui5_cl_demo_app_130 IMPLEMENTATION.
           field->* = CORRESPONDING #( lr_fields->* ).
         ENDLOOP.
 
-        render_popup_varaint( mo_client ).
+        render_popup_varaint( ).
       WHEN `POPUP_VARIANT_CLOSE`.
 
         mv_variant = VALUE #( mt_variants_pop[ selkz = abap_true ]-var OPTIONAL ).

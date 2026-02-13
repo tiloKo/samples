@@ -15,17 +15,15 @@ CLASS z2ui5_cl_demo_app_298 DEFINITION PUBLIC.
     DATA selectedproductsccsscollection TYPE string.
     DATA selectedproductinforcollection TYPE string.
 
+    DATA mo_client TYPE REF TO z2ui5_if_client.
+
   PROTECTED SECTION.
 
     DATA client TYPE REF TO z2ui5_if_client.
 
     METHODS z2ui5_set_data.
-    METHODS display_view
-      IMPORTING
-        client TYPE REF TO z2ui5_if_client.
-    METHODS on_event
-      IMPORTING
-        client TYPE REF TO z2ui5_if_client.
+    METHODS display_view.
+    METHODS on_event.
     METHODS z2ui5_display_popover
       IMPORTING
         id TYPE string.
@@ -41,14 +39,14 @@ CLASS z2ui5_cl_demo_app_298 IMPLEMENTATION.
     DATA(page_01) = view->shell(
          )->page(
             title          = `abap2UI5 - Sample: Select - Validation states`
-            navbuttonpress = client->_event_nav_app_leave( )
-            shownavbutton  = client->check_app_prev_stack( ) ).
+            navbuttonpress = mo_client->_event_nav_app_leave( )
+            shownavbutton  = mo_client->check_app_prev_stack( ) ).
 
     page_01->header_content(
        )->button( id = `button_hint_id`
            icon      = `sap-icon://hint`
            tooltip   = `Sample information`
-           press     = client->_event( `CLICK_HINT_ICON` ) ).
+           press     = mo_client->_event( `CLICK_HINT_ICON` ) ).
 
     page_01->header_content(
        )->link(
@@ -65,10 +63,10 @@ CLASS z2ui5_cl_demo_app_298 IMPLEMENTATION.
                       )->select(
                           id             = `errorSelect`
                           forceselection = abap_true
-                          selectedkey    = client->_bind( selectedproducterrorcollection )
+                          selectedkey    = mo_client->_bind( selectedproducterrorcollection )
                           valuestate     = `Error`
                           valuestatetext = `error value state text`
-                          items          = client->_bind( lt_a_products )
+                          items          = mo_client->_bind( lt_a_products )
                           )->item( key  = `{PRODUCT_ID}`
                                    text = `{NAME}`
                       )->get_parent(
@@ -80,10 +78,10 @@ CLASS z2ui5_cl_demo_app_298 IMPLEMENTATION.
                       )->select(
                           id             = `warningSelect`
                           forceselection = abap_true
-                          selectedkey    = client->_bind( selectedproductwrnngcollection )
+                          selectedkey    = mo_client->_bind( selectedproductwrnngcollection )
                           valuestate     = `Warning`
                           valuestatetext = `This is a Level 1 explanation. The items Lorem and Ipsum are not recommended from the system.`
-                          items          = client->_bind( lt_a_products )
+                          items          = mo_client->_bind( lt_a_products )
                           )->item( key  = `{PRODUCT_ID}`
                                    text = `{NAME}`
                       )->get_parent(
@@ -95,10 +93,10 @@ CLASS z2ui5_cl_demo_app_298 IMPLEMENTATION.
                       )->select(
                           id             = `successSelect`
                           forceselection = abap_true
-                          selectedkey    = client->_bind( selectedproductsccsscollection )
+                          selectedkey    = mo_client->_bind( selectedproductsccsscollection )
                           valuestate     = `Success`
                           valuestatetext = `success value state text`
-                          items          = client->_bind( lt_a_products )
+                          items          = mo_client->_bind( lt_a_products )
                           )->item( key  = `{PRODUCT_ID}`
                                    text = `{NAME}`
                       )->get_parent(
@@ -110,22 +108,22 @@ CLASS z2ui5_cl_demo_app_298 IMPLEMENTATION.
                       )->select(
                           id             = `informationSelect`
                           forceselection = abap_true
-                          selectedkey    = client->_bind( selectedproductinforcollection )
+                          selectedkey    = mo_client->_bind( selectedproductinforcollection )
                           valuestate     = `Information`
                           valuestatetext = `information value state text`
-                          items          = client->_bind( lt_a_products )
+                          items          = mo_client->_bind( lt_a_products )
                           )->item( key  = `{PRODUCT_ID}`
                                    text = `{NAME}`
                       )->get_parent(
                   )->get_parent(
               )->get_parent( ).
 
-    client->view_display( view->stringify( ) ).
+    mo_client->view_display( view->stringify( ) ).
   ENDMETHOD.
 
   METHOD on_event.
 
-    IF client->check_on_event( `CLICK_HINT_ICON` ).
+    IF mo_client->check_on_event( `CLICK_HINT_ICON` ).
       z2ui5_display_popover( `button_hint_id` ).
     ENDIF.
   ENDMETHOD.
@@ -146,14 +144,16 @@ CLASS z2ui5_cl_demo_app_298 IMPLEMENTATION.
 
   METHOD z2ui5_if_app~main.
 
+    me->mo_client = client.
+
     me->client = client.
 
     IF client->check_on_init( ).
-      display_view( client ).
+      display_view( ).
       z2ui5_set_data( ).
     ENDIF.
 
-    on_event( client ).
+    on_event( ).
   ENDMETHOD.
 
   METHOD z2ui5_set_data.

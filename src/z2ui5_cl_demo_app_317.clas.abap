@@ -34,17 +34,19 @@ CLASS z2ui5_cl_demo_app_317 DEFINITION PUBLIC FINAL CREATE PUBLIC.
       END OF ty_s_node.
     DATA mt_node TYPE STANDARD TABLE OF ty_s_node WITH EMPTY KEY.
 
+    DATA mo_client TYPE REF TO z2ui5_if_client.
+
   PROTECTED SECTION.
     METHODS build_tree.
-    METHODS display_view
-      IMPORTING
-        client TYPE REF TO z2ui5_if_client.
+    METHODS display_view.
 
 ENDCLASS.
 
 CLASS z2ui5_cl_demo_app_317 IMPLEMENTATION.
 
   METHOD z2ui5_if_app~main.
+
+    me->mo_client = client.
 
     IF client->check_on_init( ).
 
@@ -59,7 +61,7 @@ CLASS z2ui5_cl_demo_app_317 IMPLEMENTATION.
           ( id   = `08` id_parent = `06` text = `Paint 002` ) ).
 
       build_tree( ).
-      display_view( client ).
+      display_view( ).
 
     ENDIF.
 
@@ -69,7 +71,7 @@ CLASS z2ui5_cl_demo_app_317 IMPLEMENTATION.
       WHEN `ON_DROP`.
         mt_node[ id = client->get_event_arg( 1 ) ]-id_parent = client->get_event_arg( 2 ).
         build_tree( ).
-        display_view( client ).
+        display_view( ).
     ENDCASE.
   ENDMETHOD.
 
@@ -127,7 +129,7 @@ CLASS z2ui5_cl_demo_app_317 IMPLEMENTATION.
         )->_cc_plain_xml(
           |function myFunction() \{ z2ui5.oView.byId(`lo_tree`).expandToLevel(5); \}| ).
 
-    DATA(lo_tree) = lo_page->tree( items = client->_bind( mt_tree )
+    DATA(lo_tree) = lo_page->tree( items = mo_client->_bind( mt_tree )
                              id    = `tree` ).
     lo_tree->items(
         )->standard_tree_item( title = `{TEXT}`
@@ -140,14 +142,14 @@ CLASS z2ui5_cl_demo_app_317 IMPLEMENTATION.
       sourceaggregation = `items`
       targetaggregation = `items`
       dragstart         = `Horizontal`
-      drop              = client->_event(
+      drop              = mo_client->_event(
                               val   = `ON_DROP`
                               t_arg = VALUE #(
                            ( `${$parameters>/draggedControl/mAggregations/customData/0/mProperties/value}` )
                            ( `${$parameters>/droppedControl/mAggregations/customData/0/mProperties/value}` )
       ) ) ).
 
-    client->follow_up_action( `myFunction()` ).
-    client->view_display( lo_view->stringify( ) ).
+    mo_client->follow_up_action( `myFunction()` ).
+    mo_client->view_display( lo_view->stringify( ) ).
   ENDMETHOD.
 ENDCLASS.

@@ -19,12 +19,8 @@ CLASS z2ui5_cl_demo_app_287 DEFINITION PUBLIC.
 
     DATA mo_client TYPE REF TO z2ui5_if_client.
 
-    METHODS display_view
-      IMPORTING
-        mo_client TYPE REF TO z2ui5_if_client.
-    METHODS on_event
-      IMPORTING
-        mo_client TYPE REF TO z2ui5_if_client.
+    METHODS display_view.
+    METHODS on_event.
     METHODS display_popover
       IMPORTING
         id TYPE string.
@@ -103,7 +99,7 @@ CLASS z2ui5_cl_demo_app_287 IMPLEMENTATION.
     me->mo_client = client.
 
     IF mo_client->check_on_init( ).
-      display_view( mo_client ).
+      display_view( ).
 
       lt_o_model = VALUE #(
         ( title     = `wrapCharLimit is set to Default. Lorem ipsum dolor st amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. ` &&
@@ -134,6 +130,6 @@ CLASS z2ui5_cl_demo_app_287 IMPLEMENTATION.
          ) ).
     ENDIF.
 
-    on_event( mo_client ).
+    on_event( ).
   ENDMETHOD.
 ENDCLASS.

@@ -16,9 +16,11 @@ CLASS z2ui5_cl_demo_app_340 DEFINITION PUBLIC.
       RETURNING
         VALUE(result) TYPE REF TO z2ui5_cl_demo_app_340.
 
+    DATA mo_client TYPE REF TO z2ui5_if_client.
+
   PROTECTED SECTION.
-    METHODS on_event    IMPORTING !client TYPE REF TO z2ui5_if_client.
-    METHODS render_main IMPORTING !client TYPE REF TO z2ui5_if_client.
+    METHODS on_event.
+    METHODS render_main.
 
   PRIVATE SECTION.
 
@@ -28,11 +30,11 @@ CLASS z2ui5_cl_demo_app_340 IMPLEMENTATION.
 
   METHOD on_event.
 
-    IF client->check_on_event( `POPUP_CLOSE` ).
+    IF mo_client->check_on_event( `POPUP_CLOSE` ).
 
-      client->popup_destroy( ).
+      mo_client->popup_destroy( ).
 
-      client->nav_app_leave( ).
+      mo_client->nav_app_leave( ).
     ENDIF.
   ENDMETHOD.
 
@@ -43,21 +45,23 @@ CLASS z2ui5_cl_demo_app_340 IMPLEMENTATION.
     " TODO: variable is assigned but never used (ABAP cleaner)
     DATA(lo_simple_form) = lo_popup->dialog( title        = `Test`
                                        contentwidth = `60%`
-                                       afterclose   = client->_event( `POPUP_CLOSE` )
+                                       afterclose   = mo_client->_event( `POPUP_CLOSE` )
           )->simple_form( title    = ``
                           layout   = `ResponsiveGridLayout`
                           editable = abap_true
           )->content( ns = `form` )->label( text = `Test` )->input( value = `TEST` ).
 
-    client->popup_display( lo_popup->stringify( ) ).
+    mo_client->popup_display( lo_popup->stringify( ) ).
   ENDMETHOD.
 
   METHOD z2ui5_if_app~main.
 
+    me->mo_client = client.
+
     IF mv_init IS INITIAL.
       mv_init = abap_true.
 
-      render_main( client ).
+      render_main( ).
 
     ENDIF.
 
@@ -72,7 +76,7 @@ CLASS z2ui5_cl_demo_app_340 IMPLEMENTATION.
     IF <data> <> <table>.
       client->message_toast_display( `ERROR - mo_layout_obj->mr_data->* ne mt_table->*` ).
     ENDIF.
-    on_event( client ).
+    on_event( ).
   ENDMETHOD.
 
   METHOD factory.
