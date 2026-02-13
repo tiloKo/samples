@@ -34,8 +34,7 @@ CLASS z2ui5_cl_demo_app_s_01 IMPLEMENTATION.
 
   METHOD initialize_view.
 
-    set_session_stateful( client   = client
-                          stateful = abap_true ).
+    set_session_stateful( stateful = abap_true ).
 
     DATA(lo_view) = z2ui5_cl_xml_view=>factory( ).
 
@@ -90,19 +89,16 @@ CLASS z2ui5_cl_demo_app_s_01 IMPLEMENTATION.
 
     CASE mo_client->get( )-event.
       WHEN `BACK`.
-        set_session_stateful( client   = client
-                              stateful = abap_false ).
+        set_session_stateful( stateful = abap_false ).
         mo_client->nav_app_leave( ).
       WHEN `LOCK`.
         lcl_locking=>acquire_lock( ).
         mo_client->message_toast_display( `Lock acquired. Press 'Refresh lock counter'` ).
         mo_client->view_model_update( ).
       WHEN `END_SESSION`.
-        set_session_stateful( client   = client
-                              stateful = abap_false ).
+        set_session_stateful( stateful = abap_false ).
       WHEN `START_SESSION`.
-        set_session_stateful( client   = client
-                              stateful = abap_true ).
+        set_session_stateful( stateful = abap_true ).
       WHEN `REFRESH`.
         update_lock_counter( ).
         mo_client->view_model_update( ).
@@ -132,7 +128,7 @@ CLASS z2ui5_cl_demo_app_s_01 IMPLEMENTATION.
 
         CLEAR error.
 
-        IF client->check_on_init( ).
+        IF mo_client->check_on_init( ).
           update_lock_counter( ).
           initialize_view( ).
         ENDIF.
@@ -142,11 +138,11 @@ CLASS z2ui5_cl_demo_app_s_01 IMPLEMENTATION.
           CATCH z2ui5_cx_util_error INTO DATA(x_error).
             error-text = x_error->get_text( ).
             error-flag = abap_true.
-            client->view_model_update( ).
+            mo_client->view_model_update( ).
         ENDTRY.
 
       CATCH cx_root INTO DATA(lx).
-        client->message_box_display( lx->get_text( ) ).
+        mo_client->message_box_display( lx->get_text( ) ).
     ENDTRY.
   ENDMETHOD.
 

@@ -28,21 +28,20 @@ CLASS z2ui5_cl_demo_app_s_02 IMPLEMENTATION.
 
     TRY.
 
-        IF client->check_on_init( ).
+        IF mo_client->check_on_init( ).
           initialize_view( ).
         ENDIF.
 
         on_event( ).
 
       CATCH cx_root INTO DATA(lx).
-        client->message_box_display( lx->get_text( ) ).
+        mo_client->message_box_display( lx->get_text( ) ).
     ENDTRY.
   ENDMETHOD.
 
   METHOD initialize_view.
 
-    set_session_stateful( client   = client
-                          stateful = abap_true ).
+    set_session_stateful( stateful = abap_true ).
 
     DATA(lo_view) = z2ui5_cl_xml_view=>factory( ).
 
@@ -78,18 +77,15 @@ CLASS z2ui5_cl_demo_app_s_02 IMPLEMENTATION.
 
     CASE mo_client->get( )-event.
       WHEN `BACK`.
-        set_session_stateful( client   = client
-                              stateful = abap_false ).
+        set_session_stateful( stateful = abap_false ).
         mo_client->nav_app_leave( ).
       WHEN `INCREMENT`.
         mv_instance_counter = lcl_static_container=>increment( ).
         mo_client->view_model_update( ).
       WHEN `END_SESSION`.
-        set_session_stateful( client   = client
-                              stateful = abap_false ).
+        set_session_stateful( stateful = abap_false ).
       WHEN `START_SESSION`.
-        set_session_stateful( client   = client
-                              stateful = abap_true ).
+        set_session_stateful( stateful = abap_true ).
     ENDCASE.
   ENDMETHOD.
 
