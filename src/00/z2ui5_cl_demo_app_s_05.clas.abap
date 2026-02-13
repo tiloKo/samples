@@ -31,7 +31,7 @@ CLASS z2ui5_cl_demo_app_s_05 IMPLEMENTATION.
 
   METHOD z2ui5_if_app~main.
 
-    me->mo_client = mo_client.
+    me->mo_client = client.
 
     IF me->z2ui5_if_app~check_initialized = abap_false.
       mv_connections = z2ui5_cl_demo_app_s_05_ws=>get_active_connections( ).

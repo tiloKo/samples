@@ -28,7 +28,7 @@ CLASS z2ui5_cl_demo_app_039 IMPLEMENTATION.
   METHOD z2ui5_if_app~main.
 
     app-get = mo_client->get( ).
-    me->mo_client = mo_client.
+    me->mo_client = client.
 
     IF app-check_initialized = abap_false.
       app-check_initialized = abap_true.

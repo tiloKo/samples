@@ -205,7 +205,7 @@ CLASS z2ui5_cl_demo_app_116 IMPLEMENTATION.
 
     DATA lt_event_arg TYPE string_table.
 
-    me->mo_client = mo_client.
+    me->mo_client = client.
 
     IF mo_client->check_on_init( ).
       initialize( ).

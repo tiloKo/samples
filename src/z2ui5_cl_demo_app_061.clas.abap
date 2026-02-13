@@ -60,7 +60,7 @@ CLASS z2ui5_cl_demo_app_061 IMPLEMENTATION.
 
     FIELD-SYMBOLS <lo_tab> TYPE table.
 
-    me->mo_client = mo_client.
+    me->mo_client = client.
 
     IF mo_client->check_on_init( ).
 

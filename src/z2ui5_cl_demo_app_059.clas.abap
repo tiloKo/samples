@@ -34,7 +34,7 @@ CLASS z2ui5_cl_demo_app_059 IMPLEMENTATION.
 
   METHOD z2ui5_if_app~main.
 
-    me->mo_client     = mo_client.
+    me->mo_client = client.
 
     IF mo_client->check_on_init( ).
       set_data( ).
@@ -46,8 +46,6 @@ CLASS z2ui5_cl_demo_app_059 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD on_event.
-
-    me->mo_client = mo_client.
 
     IF mo_client->check_on_event( `BUTTON_SEARCH` ).
       set_data( ).

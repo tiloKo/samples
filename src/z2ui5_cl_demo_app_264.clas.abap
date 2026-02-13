@@ -91,7 +91,7 @@ CLASS z2ui5_cl_demo_app_264 IMPLEMENTATION.
 
     FIELD-SYMBOLS <fs_a_data> TYPE ty_a_data.
 
-    me->mo_client = mo_client.
+    me->mo_client = client.
 
     IF mo_client->check_on_init( ).
       display_view( mo_client ).

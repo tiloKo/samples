@@ -78,7 +78,7 @@ CLASS z2ui5_cl_demo_app_197 IMPLEMENTATION.
 
     DATA lt_range TYPE RANGE OF string.
 
-    me->mo_client = mo_client.
+    me->mo_client = client.
 
     IF mo_client->check_on_init( ).
       display_view( ).

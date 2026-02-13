@@ -58,7 +58,7 @@ CLASS z2ui5_cl_demo_app_192 IMPLEMENTATION.
   METHOD z2ui5_if_app~main.
 
     xml_parse( ).
-    me->mo_client = mo_client.
+    me->mo_client = client.
     get_data( ).
     display( ).
     xml_stringify( ).

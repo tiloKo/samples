@@ -113,7 +113,7 @@ CLASS z2ui5_cl_demo_app_132 IMPLEMENTATION.
 
   METHOD z2ui5_if_app~main.
 
-    me->mo_client = mo_client.
+    me->mo_client = client.
 
     IF mv_init IS INITIAL.
       mv_init = abap_true.

@@ -13,7 +13,7 @@ CLASS z2ui5_cl_demo_app_324 IMPLEMENTATION.
 
   METHOD z2ui5_if_app~main.
 
-    me->mo_client = mo_client.
+    me->mo_client = client.
 
     TRY.
         IF mo_client->check_on_init( ).
