@@ -10,23 +10,23 @@ CLASS z2ui5_cl_demo_app_298 DEFINITION PUBLIC.
       END OF ty_product_collection.
 
     DATA lt_a_products TYPE TABLE OF ty_product_collection.
-    DATA mv_selectedproducterrorcollection TYPE string.
-    DATA mv_selectedproductwrnngcollection TYPE string.
-    DATA mv_selectedproductsccsscollection TYPE string.
-    DATA mv_selectedproductinforcollection TYPE string.
+    DATA selectedproducterrorcollection TYPE string.
+    DATA selectedproductwrnngcollection TYPE string.
+    DATA selectedproductsccsscollection TYPE string.
+    DATA selectedproductinforcollection TYPE string.
 
   PROTECTED SECTION.
 
-    DATA mo_client TYPE REF TO z2ui5_if_client.
+    DATA client TYPE REF TO z2ui5_if_client.
 
-    METHODS set_data.
+    METHODS z2ui5_set_data.
     METHODS display_view
       IMPORTING
-        mo_client TYPE REF TO z2ui5_if_client.
+        client TYPE REF TO z2ui5_if_client.
     METHODS on_event
       IMPORTING
-        mo_client TYPE REF TO z2ui5_if_client.
-    METHODS display_popover
+        client TYPE REF TO z2ui5_if_client.
+    METHODS z2ui5_display_popover
       IMPORTING
         id TYPE string.
 
@@ -37,26 +37,26 @@ CLASS z2ui5_cl_demo_app_298 IMPLEMENTATION.
 
   METHOD display_view.
 
-    DATA(lo_view) = z2ui5_cl_xml_view=>factory( ).
-    DATA(lo_page_01) = lo_view->shell(
+    DATA(view) = z2ui5_cl_xml_view=>factory( ).
+    DATA(page_01) = view->shell(
          )->page(
             title          = `abap2UI5 - Sample: Select - Validation states`
-            navbuttonpress = mo_client->_event_nav_app_leave( )
-            shownavbutton  = mo_client->check_app_prev_stack( ) ).
+            navbuttonpress = client->_event_nav_app_leave( )
+            shownavbutton  = client->check_app_prev_stack( ) ).
 
-    lo_page_01->header_content(
+    page_01->header_content(
        )->button( id = `button_hint_id`
            icon      = `sap-icon://hint`
            tooltip   = `Sample information`
-           press     = mo_client->_event( `CLICK_HINT_ICON` ) ).
+           press     = client->_event( `CLICK_HINT_ICON` ) ).
 
-    lo_page_01->header_content(
+    page_01->header_content(
        )->link(
            text   = `UI5 Demo Kit`
            target = `_blank`
            href   = `https://sapui5.hana.ondemand.com/sdk/#/entity/sap.m.Select/sample/sap.m.sample.SelectValueState` ).
 
-    lo_page_01->page( showheader = abap_false
+    page_01->page( showheader = abap_false
               )->content(
                   )->hbox( class = `sapUiMediumMarginBottom`
                       )->label( text = `Error state`
@@ -65,10 +65,10 @@ CLASS z2ui5_cl_demo_app_298 IMPLEMENTATION.
                       )->select(
                           id             = `errorSelect`
                           forceselection = abap_true
-                          selectedkey    = mo_client->_bind( mv_selectedproducterrorcollection )
+                          selectedkey    = client->_bind( selectedproducterrorcollection )
                           valuestate     = `Error`
                           valuestatetext = `error value state text`
-                          items          = mo_client->_bind( lt_a_products )
+                          items          = client->_bind( lt_a_products )
                           )->item( key  = `{PRODUCT_ID}`
                                    text = `{NAME}`
                       )->get_parent(
@@ -80,10 +80,10 @@ CLASS z2ui5_cl_demo_app_298 IMPLEMENTATION.
                       )->select(
                           id             = `warningSelect`
                           forceselection = abap_true
-                          selectedkey    = mo_client->_bind( mv_selectedproductwrnngcollection )
+                          selectedkey    = client->_bind( selectedproductwrnngcollection )
                           valuestate     = `Warning`
                           valuestatetext = `This is a Level 1 explanation. The items Lorem and Ipsum are not recommended from the system.`
-                          items          = mo_client->_bind( lt_a_products )
+                          items          = client->_bind( lt_a_products )
                           )->item( key  = `{PRODUCT_ID}`
                                    text = `{NAME}`
                       )->get_parent(
@@ -95,10 +95,10 @@ CLASS z2ui5_cl_demo_app_298 IMPLEMENTATION.
                       )->select(
                           id             = `successSelect`
                           forceselection = abap_true
-                          selectedkey    = mo_client->_bind( mv_selectedproductsccsscollection )
+                          selectedkey    = client->_bind( selectedproductsccsscollection )
                           valuestate     = `Success`
                           valuestatetext = `success value state text`
-                          items          = mo_client->_bind( lt_a_products )
+                          items          = client->_bind( lt_a_products )
                           )->item( key  = `{PRODUCT_ID}`
                                    text = `{NAME}`
                       )->get_parent(
@@ -110,64 +110,64 @@ CLASS z2ui5_cl_demo_app_298 IMPLEMENTATION.
                       )->select(
                           id             = `informationSelect`
                           forceselection = abap_true
-                          selectedkey    = mo_client->_bind( mv_selectedproductinforcollection )
+                          selectedkey    = client->_bind( selectedproductinforcollection )
                           valuestate     = `Information`
                           valuestatetext = `information value state text`
-                          items          = mo_client->_bind( lt_a_products )
+                          items          = client->_bind( lt_a_products )
                           )->item( key  = `{PRODUCT_ID}`
                                    text = `{NAME}`
                       )->get_parent(
                   )->get_parent(
               )->get_parent( ).
 
-    mo_client->view_display( lo_view->stringify( ) ).
+    client->view_display( view->stringify( ) ).
   ENDMETHOD.
 
   METHOD on_event.
 
-    IF mo_client->check_on_event( `CLICK_HINT_ICON` ).
-      display_popover( `button_hint_id` ).
+    IF client->check_on_event( `CLICK_HINT_ICON` ).
+      z2ui5_display_popover( `button_hint_id` ).
     ENDIF.
   ENDMETHOD.
 
-  METHOD display_popover.
+  METHOD z2ui5_display_popover.
 
-    DATA(lo_view) = z2ui5_cl_xml_view=>factory_popup( ).
-    lo_view->quick_view( placement = `Bottom`
+    DATA(view) = z2ui5_cl_xml_view=>factory_popup( ).
+    view->quick_view( placement = `Bottom`
                       width     = `auto`
               )->quick_view_page( pageid      = `sampleInformationId`
                                   header      = `Sample information`
                                   description = `Visualizes the validation state of the control, for example, Error, Warning and Success.` ).
 
-    mo_client->popover_display(
-      xml   = lo_view->stringify( )
+    client->popover_display(
+      xml   = view->stringify( )
       by_id = id ).
   ENDMETHOD.
 
   METHOD z2ui5_if_app~main.
 
-    me->mo_client = mo_client.
+    me->client = client.
 
-    IF mo_client->check_on_init( ).
-      display_view( mo_client ).
-      set_data( ).
+    IF client->check_on_init( ).
+      display_view( client ).
+      z2ui5_set_data( ).
     ENDIF.
 
-    on_event( mo_client ).
+    on_event( client ).
   ENDMETHOD.
 
-  METHOD set_data.
+  METHOD z2ui5_set_data.
 
-    CLEAR mv_selectedproducterrorcollection.
-    CLEAR mv_selectedproductwrnngcollection.
-    CLEAR mv_selectedproductsccsscollection.
-    CLEAR mv_selectedproductinforcollection.
+    CLEAR selectedproducterrorcollection.
+    CLEAR selectedproductwrnngcollection.
+    CLEAR selectedproductsccsscollection.
+    CLEAR selectedproductinforcollection.
     CLEAR lt_a_products.
 
-    mv_selectedproducterrorcollection  = `HT-998`.
-    mv_selectedproductwrnngcollection  = `HT-999`.
-    mv_selectedproductsccsscollection  = `HT-1000`.
-    mv_selectedproductinforcollection  = `HT-1007`.
+    selectedproducterrorcollection  = `HT-998`.
+    selectedproductwrnngcollection  = `HT-999`.
+    selectedproductsccsscollection  = `HT-1000`.
+    selectedproductinforcollection  = `HT-1007`.
 
     " Populate the internal table
     lt_a_products = VALUE #(
