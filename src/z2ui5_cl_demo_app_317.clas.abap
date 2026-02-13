@@ -67,7 +67,7 @@ CLASS z2ui5_cl_demo_app_317 IMPLEMENTATION.
 
     CASE client->get( )-event.
       WHEN `expand`.
-        client->follow_up_action( `debugger; z2ui5.oView.byId( 'tree' ).expandToLevel(10);`).
+        client->follow_up_action( `debugger; z2ui5.oView.byId( 'tree' ).expandToLevel(10);` ).
       WHEN `ON_DROP`.
         mt_node[ id = client->get_event_arg( 1 ) ]-id_parent = client->get_event_arg( 2 ).
         build_tree( ).
@@ -127,7 +127,7 @@ CLASS z2ui5_cl_demo_app_317 IMPLEMENTATION.
     lo_page->_generic( name = `script`
                     ns   = `html`
         )->_cc_plain_xml(
-          |function myFunction() \{ z2ui5.oView.byId(`lo_tree`).expandToLevel(5); \}| ).
+          |function myFunction() \{ z2ui5.oView.byId(`lo_tree` ).expandToLevel(5); \}| ).
 
     DATA(lo_tree) = lo_page->tree( items = mo_client->_bind( mt_tree )
                              id    = `tree` ).
@@ -136,7 +136,7 @@ CLASS z2ui5_cl_demo_app_317 IMPLEMENTATION.
         )->get(
           )->custom_data(
               )->core_custom_data( key   = `ID`
-                                   value = `{ID}`).
+                                   value = `{ID}` ).
 
     lo_tree->drag_drop_config( ns = `` )->drag_drop_info(
       sourceaggregation = `items`

@@ -12,7 +12,7 @@ ENDCLASS.
 CLASS zcl_2ui5_lock DEFINITION INHERITING FROM z2ui5_cl_demo_app_351.
   PUBLIC SECTION.
     DATA check_initialized TYPE abap_bool.
-    DATA varkey TYPE char120.
+    DATA varkey TYPE c LENGTH 120.
     DATA mo_client TYPE REF TO z2ui5_if_client.
     METHODS z2ui5_if_app~main                       REDEFINITION.
   PROTECTED SECTION.

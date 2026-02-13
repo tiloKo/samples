@@ -70,7 +70,7 @@ CLASS z2ui5_cl_demo_app_314 IMPLEMENTATION.
       lo_tab->items( )->column_list_item( )->cells(
          )->text( `{http>VALUE}`
          )->text( `{http>INFO}`
-         )->text( `{http>DESCR}`).
+         )->text( `{http>DESCR}` ).
 
       lo_tab = lo_page->table(
          items   = `{/BookingSupplement}`

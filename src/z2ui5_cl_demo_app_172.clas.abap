@@ -121,7 +121,7 @@ CLASS z2ui5_cl_demo_app_172 IMPLEMENTATION.
     lo_columns->ui_column( width          = `8rem`
                         sortproperty   = `LINK`
                         filterproperty = `LINK` )->text( text = `Link Column` )->ui_template( )->link( text = `{LINK}`
-      press                                                                                                 = mo_client->_event( val = `LINK_CLICK` t_arg = VALUE #( ( `${INDEX}`) ) ) ).
+      press                                                                                                 = mo_client->_event( val = `LINK_CLICK` t_arg = VALUE #( ( `${INDEX}` ) ) ) ).
     lo_columns->ui_column( width          = `8rem`
                         sortproperty   = `CURRENCY`
                         filterproperty = `CURRENCY` )->text( text = `Currency Column` )->ui_template( )->text(

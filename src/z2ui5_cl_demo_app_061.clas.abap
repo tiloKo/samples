@@ -64,7 +64,7 @@ CLASS z2ui5_cl_demo_app_061 IMPLEMENTATION.
 
     IF mo_client->check_on_init( ).
 
-      CREATE DATA mt_tab TYPE STANDARD TABLE OF (`Z2UI5_T_01`).
+      CREATE DATA mt_tab TYPE STANDARD TABLE OF (`Z2UI5_T_01` ).
 
       ASSIGN mt_tab->* TO <lo_tab>.
 

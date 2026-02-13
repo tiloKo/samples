@@ -74,7 +74,7 @@ CLASS z2ui5_cl_demo_app_259 IMPLEMENTATION.
                                   )->hbox(
                                       )->button( text            = `Default`
                                                  press           = mo_client->_event( val = `ON_PRESS` t_arg = VALUE #( ( `${$source>/id}` ) ) )
-                                                 ariadescribedby = `defaultButtonDescription genericButtonDescription`)->get(
+                                                 ariadescribedby = `defaultButtonDescription genericButtonDescription` )->get(
                                           )->layout_data(
                                               )->flex_item_data( growfactor = `1`
                                           )->get_parent(

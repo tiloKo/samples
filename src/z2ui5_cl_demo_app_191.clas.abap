@@ -99,19 +99,19 @@ CLASS z2ui5_cl_demo_app_191 IMPLEMENTATION.
         ENDIF.
         TRY.
 
-            CALL METHOD mo_app->(`SET_APP_DATA`)
+            CALL METHOD mo_app->(`SET_APP_DATA` )
               EXPORTING
                 count = t002->count
                 table = t002->table.
 
             render_main( ).
 
-            ASSIGN mo_app->(`MO_PARENT_VIEW`) TO FIELD-SYMBOL(<lo_view>).
+            ASSIGN mo_app->(`MO_PARENT_VIEW` ) TO FIELD-SYMBOL(<lo_view>).
             IF <lo_view> IS ASSIGNED.
               <lo_view> = mo_main_page.
             ENDIF.
 
-            CALL METHOD mo_app->(`Z2UI5_IF_APP~MAIN`)
+            CALL METHOD mo_app->(`Z2UI5_IF_APP~MAIN` )
               EXPORTING
                 mo_client = mo_client.
 
@@ -122,7 +122,7 @@ CLASS z2ui5_cl_demo_app_191 IMPLEMENTATION.
 
     mo_client->view_model_update( ).
 
-    ASSIGN mo_app->(`MV_VIEW_DISPLAY`) TO <view_display>.
+    ASSIGN mo_app->(`MV_VIEW_DISPLAY` ) TO <view_display>.
 
     IF <view_display> = abap_true.
       <view_display> = abap_false.

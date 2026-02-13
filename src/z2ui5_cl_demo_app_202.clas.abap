@@ -45,7 +45,7 @@ CLASS z2ui5_cl_demo_app_202 IMPLEMENTATION.
     lr_wiz_step2->message_strip( text = `STEP2` ).
     lr_wiz_step2->button(
         text  = `Press Step 2.2`
-        press = mo_client->_event(`STEP22` ) ).
+        press = mo_client->_event( `STEP22` ) ).
     lr_wiz_step2->button(
         text  = `Press Step 2.3`
         press = mo_client->_event( `STEP23` ) ).
@@ -82,10 +82,10 @@ CLASS z2ui5_cl_demo_app_202 IMPLEMENTATION.
     CASE client->get( )-event.
       WHEN `STEP22`.
 
-        client->follow_up_action( val = `sap.z2ui5.decideNextStep(``STEP2``,``STEP22``);` ).
+        client->follow_up_action( val = `sap.z2ui5.decideNextStep(``STEP2``,``STEP22`` );` ).
       WHEN `STEP23`.
 
-        client->follow_up_action( val = `sap.z2ui5.decideNextStep(``STEP2``,``STEP23``);` ).
+        client->follow_up_action( val = `sap.z2ui5.decideNextStep(``STEP2``,``STEP23`` );` ).
     ENDCASE.
     client->view_model_update( ).
   ENDMETHOD.

@@ -180,7 +180,7 @@ CLASS z2ui5_cl_demo_app_058 IMPLEMENTATION.
 
     tab->header_toolbar(
           )->toolbar(
-              )->title( text = ms_layout-title && ` (` && shift_right( CONV string( lines( mt_table ) ) ) && `)`
+              )->title( text = ms_layout-title && ` (` && shift_right( |{ lines( mt_table ) }| ) && ` )`
       )->toolbar_spacer(
               )->button(
                   icon  = `sap-icon://save`
@@ -194,9 +194,9 @@ CLASS z2ui5_cl_demo_app_058 IMPLEMENTATION.
     LOOP AT ms_layout-t_cols REFERENCE INTO DATA(lr_field)
           WHERE visible = abap_true.
       lo_columns->column(
-            minscreenwidth = shift_right( CONV string( lv_width ) ) && `px`
+            minscreenwidth = shift_right( |{ lv_width }| ) && `px`
             demandpopin    = abap_true
-            width          = lr_field->length )->text( text = CONV string( lr_field->title ) ).
+            width          = lr_field->length )->text( text = lr_field->title ).
       lv_width = lv_width + 10.
     ENDLOOP.
 

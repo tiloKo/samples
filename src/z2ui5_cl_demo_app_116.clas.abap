@@ -111,7 +111,7 @@ CLASS z2ui5_cl_demo_app_116 IMPLEMENTATION.
             )->hbox(
                 )->title( text = `PriceList` ).
 
-    DATA(lo_header_content) = lo_page->header_content( ns = `uxap`).
+    DATA(lo_header_content) = lo_page->header_content( ns = `uxap` ).
     lo_header_content->block_layout(
       )->block_layout_row(
       )->block_layout_cell( backgroundcolorset   = `ColorSet10`

@@ -44,9 +44,9 @@ CLASS z2ui5_cl_demo_app_104 IMPLEMENTATION.
 
     IF mo_app_sub IS BOUND.
 
-      ASSIGN mo_app_sub->(`MO_VIEW_PARENT`) TO FIELD-SYMBOL(<fs>).
+      ASSIGN mo_app_sub->(`MO_VIEW_PARENT` ) TO FIELD-SYMBOL(<fs>).
       <fs> = mo_grid_sub.
-      CALL METHOD mo_app_sub->(`Z2UI5_IF_APP~MAIN`) EXPORTING mo_client = mo_client.
+      CALL METHOD mo_app_sub->(`Z2UI5_IF_APP~MAIN` ) EXPORTING mo_client = mo_client.
 
     ENDIF.
   ENDMETHOD.
@@ -56,9 +56,9 @@ CLASS z2ui5_cl_demo_app_104 IMPLEMENTATION.
     mv_classname = to_upper( mv_classname ).
     CREATE OBJECT mo_app_sub TYPE (mv_classname).
 
-    ASSIGN mo_app_sub->(`MO_VIEW_PARENT`) TO FIELD-SYMBOL(<fs>).
+    ASSIGN mo_app_sub->(`MO_VIEW_PARENT` ) TO FIELD-SYMBOL(<fs>).
     <fs> = mo_grid_sub.
-    CALL METHOD mo_app_sub->(`Z2UI5_IF_APP~MAIN`) EXPORTING mo_client = mo_client.
+    CALL METHOD mo_app_sub->(`Z2UI5_IF_APP~MAIN` ) EXPORTING mo_client = mo_client.
   ENDMETHOD.
 
   METHOD view_display_detail.
@@ -85,7 +85,7 @@ CLASS z2ui5_cl_demo_app_104 IMPLEMENTATION.
          )->get_parent( ).
 
     DATA(lo_col_layout) = lo_page->flexible_column_layout( layout = mo_client->_bind_edit( mv_layout )
-                                                     id     =`test` ).
+                                                     id     = `test` ).
 
     DATA(lr_master) = lo_col_layout->begin_column_pages( ).
 

@@ -61,12 +61,12 @@ CLASS z2ui5_cl_demo_app_080 IMPLEMENTATION.
             shownavbutton       = mo_client->check_app_prev_stack( )
             class               = `sapUiContentPadding` ).
 
-    DATA(lo_vbox) = lo_page->vbox( class =`sapUiSmallMargin` ).
+    DATA(lo_vbox) = lo_page->vbox( class = `sapUiSmallMargin` ).
 
     DATA(lo_planningcalendar) = lo_vbox->planning_calendar(
-                                                          startdate         = `{= Helper.DateCreateObject($` && mo_client->_bind( lv_s_date ) && `) }`
+                                                          startdate         = `{= Helper.DateCreateObject($` && mo_client->_bind( lv_s_date ) && ` ) }`
                                                           rows              = `{path: '` && mo_client->_bind( val = mt_people path = abap_true ) && `'}`
-                                                          appointmentselect = mo_client->_event( val = `AppSelected` t_arg = VALUE #( ( `${$parameters>/appointment/mProperties/title}`) ) )
+                                                          appointmentselect = mo_client->_event( val = `AppSelected` t_arg = VALUE #( ( `${$parameters>/appointment/mProperties/title}` ) ) )
                                                           showweeknumbers   = abap_true ).
 
     DATA(lo_rows) = lo_planningcalendar->rows( ).

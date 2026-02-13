@@ -58,7 +58,7 @@ CLASS z2ui5_cl_demo_app_098 IMPLEMENTATION.
     lo_columns->ui_column( sortproperty   = `DESCR`
                            filterproperty = `DESCR` )->text( text = `DESCR` )->ui_template( )->text( text = `{DESCR}` ).
     lo_columns->ui_column( sortproperty   = `INFO`
-                           filterproperty = `INFO`)->text( text = `INFO` )->ui_template( )->text( text = `{INFO}` ).
+                           filterproperty = `INFO` )->text( text = `INFO` )->ui_template( )->text( text = `{INFO}` ).
     lo_columns->get_parent( )->ui_row_action_template( )->ui_row_action(
        )->ui_row_action_item( type = `Navigation` "icon = `sap-icon://navigation-right-arrow`
                            press   = mo_client->_event( val = `ROW_NAVIGATE` t_arg = VALUE #( ( `${TITLE}` ) ) ) ).
@@ -105,7 +105,7 @@ CLASS z2ui5_cl_demo_app_098 IMPLEMENTATION.
          )->get_parent( ).
 
     DATA(lo_col_layout) = lo_page->flexible_column_layout( layout = mo_client->_bind_edit( mv_layout )
-                                                     id     =`test` ).
+                                                     id     = `test` ).
 
     DATA(lr_master) = lo_col_layout->begin_column_pages( ).
 

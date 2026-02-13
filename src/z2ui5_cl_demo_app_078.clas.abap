@@ -64,7 +64,7 @@ CLASS z2ui5_cl_demo_app_078 IMPLEMENTATION.
             )->input( value   = `{KEY}`
                       enabled = `{EDITABLE}`
             )->input( value   = `{TEXT}`
-                      enabled = `{EDITABLE}`).
+                      enabled = `{EDITABLE}` ).
 
       client->view_display( lo_view->stringify( ) ).
 

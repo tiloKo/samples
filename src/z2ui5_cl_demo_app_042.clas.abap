@@ -127,7 +127,7 @@ CLASS z2ui5_cl_demo_app_042 IMPLEMENTATION.
                           )->label( text = `goals2`
                           )->label( text = `goals2`
                           )->label( text = `goals2`
-                          )->label( text = `goals2`).
+                          )->label( text = `goals2` ).
 
     lo_sections->object_page_section( titleuppercase = abap_false
                                    id             = `PersonalSection`

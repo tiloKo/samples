@@ -358,14 +358,14 @@ CLASS z2ui5_cl_demo_app_130 IMPLEMENTATION.
       LOOP AT mt_fields REFERENCE INTO DATA(lr_tab).
         DATA(lv_tabix) = sy-tabix.
 
-        DATA(lv_scrtext) = get_txt( CONV #( lr_tab->field_doma ) ).
+        DATA(lv_scrtext) = get_txt( lr_tab->field_doma ).
 
         lo_content->label( text = lv_scrtext
           )->multi_input(
                    tokens           = mo_client->_bind( val = lr_tab->t_token tab = mt_fields tab_index = lv_tabix )
                    showclearicon    = abap_true
                    id               = lr_tab->field
-                   valuehelprequest = mo_client->_event( val = `CALL_POPUP_FILTER` t_arg = VALUE #( ( CONV #( lr_tab->field ) ) ) )
+                   valuehelprequest = mo_client->_event( val = `CALL_POPUP_FILTER` t_arg = VALUE #( ( lr_tab->field ) ) )
                )->item(
                        key  = `{KEY}`
                        text = `{TEXT}`

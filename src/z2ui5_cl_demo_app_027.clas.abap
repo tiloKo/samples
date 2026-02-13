@@ -98,7 +98,7 @@ CLASS z2ui5_cl_demo_app_027 IMPLEMENTATION.
                           `  path:"` && mo_client->_bind( val  = mv_input32
                                                        path = abap_true ) && `" }`
                 )->input(
-                    value   = `{= Math.max($` && mo_client->_bind( mv_input31 ) &&`, $` && mo_client->_bind( mv_input32 ) && `) }`
+                    value   = `{= Math.max($` && mo_client->_bind( mv_input31 ) &&`, $` && mo_client->_bind( mv_input32 ) && ` ) }`
                     enabled = abap_false
       )->label( `only enabled when the quantity equals 500`
                 )->input( `{ type : "sap.ui.model.type.Integer",` &&
@@ -111,7 +111,7 @@ CLASS z2ui5_cl_demo_app_027 IMPLEMENTATION.
                 )->input( mo_client->_bind( mv_input41 )
                 )->button(
                     text    = `VIP`
-                    enabled = `{= RegExp('vip', 'i').test($` && mo_client->_bind( mv_input41 ) && `) }`
+                    enabled = `{= RegExp('vip', 'i').test($` && mo_client->_bind( mv_input41 ) && ` ) }`
       )->label( `concatenate both inputs`
                 )->input( mo_client->_bind( mv_input51 )
                 )->input( mo_client->_bind( mv_input52 )

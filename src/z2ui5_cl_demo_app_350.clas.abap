@@ -3,7 +3,7 @@ CLASS z2ui5_cl_demo_app_350 DEFINITION PUBLIC.
     INTERFACES z2ui5_if_app.
     DATA: view_id TYPE i.
     DATA mv_text TYPE string VALUE `call booking mask`.
-    DATA mv_varkey TYPE char120.
+    DATA mv_varkey TYPE c LENGTH 120.
 
     METHODS initialize_view2.
 

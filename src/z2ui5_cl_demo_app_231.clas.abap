@@ -63,19 +63,19 @@ CLASS z2ui5_cl_demo_app_231 IMPLEMENTATION.
             id              = `DRS1`
             displayformat   = `yyyy/MM/dd`
             change          = client->_event( val = `HANDLE_CHANGE` t_arg = VALUE #( ( `DRS2` ) ) )
-            datevalue       = `{= Helper.DateCreateObject($` && client->_bind( drs1-start ) && `) }`
-            seconddatevalue = `{= Helper.DateCreateObject($` && client->_bind( drs1-end ) && `) }` ).
+            datevalue       = `{= Helper.DateCreateObject($` && client->_bind( drs1-start ) && ` ) }`
+            seconddatevalue = `{= Helper.DateCreateObject($` && client->_bind( drs1-end ) && ` ) }` ).
 
     " DRS2
     lo_vbox->label( text     = `DateRangeSelection with minDate=2016-01-01 and maxDate=2016-12-31:`
                  labelfor = `DRS2`
        )->date_range_selection(
             id              = `DRS2`
-            mindate         = `{= Helper.DateCreateObject($` && client->_bind( mindate ) && `) }`
-            maxdate         = `{= Helper.DateCreateObject($` && client->_bind( maxdate ) && `) }`
+            mindate         = `{= Helper.DateCreateObject($` && client->_bind( mindate ) && ` ) }`
+            maxdate         = `{= Helper.DateCreateObject($` && client->_bind( maxdate ) && ` ) }`
             change          = client->_event( val = `HANDLE_CHANGE` t_arg = VALUE #( ( `DRS2` ) ) )
-            datevalue       = `{= Helper.DateCreateObject($` && client->_bind( drs2-start ) && `) }`
-            seconddatevalue = `{= Helper.DateCreateObject($` && client->_bind( drs2-end ) && `) }` ).
+            datevalue       = `{= Helper.DateCreateObject($` && client->_bind( drs2-start ) && ` ) }`
+            seconddatevalue = `{= Helper.DateCreateObject($` && client->_bind( drs2-end ) && ` ) }` ).
 
     " DRS3
     lo_vbox->label( text     = `DateRangeSelection with OK button in the footer and with shortcut for today:"`
@@ -85,8 +85,8 @@ CLASS z2ui5_cl_demo_app_231 IMPLEMENTATION.
             showcurrentdatebutton = abap_true
             showfooter            = abap_true
             change                = client->_event( val = `HANDLE_CHANGE` t_arg = VALUE #( ( `DRS3` ) ) )
-            datevalue             = `{= Helper.DateCreateObject($` && client->_bind( drs3-start ) && `) }`
-            seconddatevalue       = `{= Helper.DateCreateObject($` && client->_bind( drs3-end ) && `) }` ).
+            datevalue             = `{= Helper.DateCreateObject($` && client->_bind( drs3-start ) && ` ) }`
+            seconddatevalue       = `{= Helper.DateCreateObject($` && client->_bind( drs3-end ) && ` ) }` ).
 
     " DRS4
     lo_vbox->label( text     = `DateRangeSelection with displayFormat 'MM/yyyy':`
@@ -95,8 +95,8 @@ CLASS z2ui5_cl_demo_app_231 IMPLEMENTATION.
             id              = `DRS4`
             change          = client->_event( val = `HANDLE_CHANGE` t_arg = VALUE #( ( `DRS4` ) ) )
             displayformat   = `MM/yyyy`
-            datevalue       = `{= Helper.DateCreateObject($` && client->_bind( drs4-start ) && `) }`
-            seconddatevalue = `{= Helper.DateCreateObject($` && client->_bind( drs4-end ) && `) }` ).
+            datevalue       = `{= Helper.DateCreateObject($` && client->_bind( drs4-start ) && ` ) }`
+            seconddatevalue = `{= Helper.DateCreateObject($` && client->_bind( drs4-end ) && ` ) }` ).
 
     " DRS5
     lo_vbox->label( text     = `DateRangeSelection with displayFormat 'MM/yyyy':`
@@ -105,8 +105,8 @@ CLASS z2ui5_cl_demo_app_231 IMPLEMENTATION.
             id              = `DRS5`
             change          = client->_event( val = `HANDLE_CHANGE` t_arg = VALUE #( ( `DRS5` ) ) )
             displayformat   = `yyyy`
-            datevalue       = `{= Helper.DateCreateObject($` && client->_bind( drs5-start ) && `) }`
-            seconddatevalue = `{= Helper.DateCreateObject($` && client->_bind( drs5-end ) && `) }` ).
+            datevalue       = `{= Helper.DateCreateObject($` && client->_bind( drs5-start ) && ` ) }`
+            seconddatevalue = `{= Helper.DateCreateObject($` && client->_bind( drs5-end ) && ` ) }` ).
 
     lo_vbox->label( text     = `Change event`
                  labelfor = `TextEvent` ).

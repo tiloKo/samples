@@ -258,19 +258,19 @@ CLASS z2ui5_cl_demo_app_090 IMPLEMENTATION.
                          ( columnkey = `supplierName` showifgrouped = abap_false ) ).
 
     mt_columns_p13n = VALUE #(
-                                ( visible = `true` name = `key1` label = `City` )
-                                ( visible = `false` name = `key2` label = `Country` )
-                                ( visible = `false` name = `key2` label = `Region` ) ).
+                                ( visible = abap_true name = `key1` label = `City` )
+                                ( visible = abap_false name = `key2` label = `Country` )
+                                ( visible = abap_false name = `key2` label = `Region` ) ).
 
     mt_sort_p13n = VALUE #(
-                          ( sorted = `true` name = `key1` label = `City` descending = `true` )
-                          ( sorted = `false` name = `key2` label = `Country` descending = `false` )
-                          ( sorted = `false` name = `key2` label = `Region` descending = `false` ) ).
+                          ( sorted = abap_true name = `key1` label = `City` descending = abap_true )
+                          ( sorted = abap_false name = `key2` label = `Country` descending = abap_false )
+                          ( sorted = abap_false name = `key2` label = `Region` descending = abap_false ) ).
 
     mt_groups_p13n = VALUE #(
-                          ( grouped = `true` name = `key1` label = `City` )
-                          ( grouped = `false` name = `key2` label = `Country` )
-                          ( grouped = `false` name = `key2` label = `Region` ) ).
+                          ( grouped = abap_true name = `key1` label = `City` )
+                          ( grouped = abap_false name = `key2` label = `Country` )
+                          ( grouped = abap_false name = `key2` label = `Region` ) ).
   ENDMETHOD.
 
   METHOD get_custom_js.
