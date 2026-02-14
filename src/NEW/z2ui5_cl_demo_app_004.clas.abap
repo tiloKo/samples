@@ -58,7 +58,6 @@ CLASS z2ui5_cl_demo_app_004 IMPLEMENTATION.
   METHOD display_view.
 
     DATA(view) = z2ui5_cl_xml_view=>factory( ).
-    
     CASE mv_view_main.
       WHEN `MAIN`.
         view->shell(
