@@ -72,4 +72,5 @@ CLASS z2ui5_cl_demo_app_001 IMPLEMENTATION.
     mv_quantity = `500`.
 
   ENDMETHOD.
+  
 ENDCLASS.
