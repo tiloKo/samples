@@ -44,16 +44,14 @@ CLASS z2ui5_cl_demo_app_009 DEFINITION PUBLIC.
     DATA mt_employees TYPE STANDARD TABLE OF s_employee WITH EMPTY KEY.
 
     DATA mv_view_popup TYPE string.
-    METHODS popup_f4_table.
-    METHODS popup_f4_table_custom.
-    DATA mo_client TYPE REF TO z2ui5_if_client.
 
   PROTECTED SECTION.
 
-    METHODS on_rendering.
+    DATA client TYPE REF TO z2ui5_if_client.
 
-    METHODS on_event.
     METHODS on_init.
+    METHODS display_view.
+    METHODS on_event.
 
   PRIVATE SECTION.
 ENDCLASS.
@@ -63,11 +61,10 @@ CLASS z2ui5_cl_demo_app_009 IMPLEMENTATION.
   METHOD popup_f4_table.
 
     DATA(lo_popup) = z2ui5_cl_xml_view=>factory_popup( ).
-
     lo_popup->dialog( `abap2UI5 - F4 Value Help`
       )->table(
             mode  = `SingleSelectLeft`
-            items = mo_client->_bind_edit( mt_suggestion_sel )
+            items = client->_bind_edit( mt_suggestion_sel )
         )->columns(
             )->column( `20rem`
                 )->text( `Color` )->get_parent(
@@ -83,9 +80,10 @@ CLASS z2ui5_cl_demo_app_009 IMPLEMENTATION.
       )->buttons(
             )->button(
                 text  = `continue`
-                press = mo_client->_event( `POPUP_TABLE_F4_CONTINUE` )
+                press = client->_event( `POPUP_TABLE_F4_CONTINUE` )
                 type  = `Emphasized` ).
-    mo_client->popup_display( lo_popup->stringify( ) ).
+    client->popup_display( lo_popup->stringify( ) ).
+
   ENDMETHOD.
 
   METHOD popup_f4_table_custom.
@@ -141,21 +139,20 @@ CLASS z2ui5_cl_demo_app_009 IMPLEMENTATION.
 
   METHOD z2ui5_if_app~main.
 
-    me->mo_client = client.
+    me->client = client.
+    CASE abap_true.
+      WHEN client->check_on_init( ).
+        on_init( ).
+        display_view( ).
+      WHEN client->check_on_event( ).
+        on_event( ).
+    ENDCASE.
 
-    CLEAR mv_view_popup.
-
-    IF client->check_on_init( ).
-      on_init( ).
-    ENDIF.
-    on_event( ).
-
-    on_rendering( ).
   ENDMETHOD.
 
   METHOD on_event.
 
-    CASE mo_client->get( )-event.
+    CASE client->get( )-event.
       WHEN `POPUP_TABLE_F4`.
         mt_suggestion_sel = mt_suggestion.
         popup_f4_table( ).
@@ -174,22 +171,23 @@ CLASS z2ui5_cl_demo_app_009 IMPLEMENTATION.
         IF lines( mt_employees_sel ) = 1.
           screen-name = mt_employees_sel[ 1 ]-name.
           screen-lastname = mt_employees_sel[ 1 ]-lastname.
-          mo_client->message_toast_display( `f4 value selected` ).
-          mo_client->popup_destroy( ).
+          client->message_toast_display( `f4 value selected` ).
+          client->popup_destroy( ).
         ENDIF.
       WHEN `POPUP_TABLE_F4_CONTINUE`.
         DELETE mt_suggestion_sel WHERE selkz = abap_false.
         IF lines( mt_suggestion_sel ) = 1.
           screen-color_02 = mt_suggestion_sel[ 1 ]-value.
-          mo_client->message_toast_display( `f4 value selected` ).
-          mo_client->popup_destroy( ).
+          client->message_toast_display( `f4 value selected` ).
+          client->popup_destroy( ).
         ENDIF.
       WHEN `BUTTON_SEND`.
-        mo_client->message_box_display( `success - values send to the server` ).
+        client->message_box_display( `success - values send to the server` ).
       WHEN `BUTTON_CLEAR`.
         CLEAR screen.
-        mo_client->message_box_display( `View initialized` ).
+        client->message_box_display( `View initialized` ).
     ENDCASE.
+
   ENDMETHOD.
 
   METHOD on_init.

@@ -15,36 +15,37 @@ CLASS z2ui5_cl_demo_app_006 DEFINITION PUBLIC.
         percentage TYPE p LENGTH 5 DECIMALS 2,
         valuecolor TYPE string,
       END OF ty_row.
-
     DATA mt_tab TYPE STANDARD TABLE OF ty_row WITH EMPTY KEY.
 
     DATA mv_key TYPE string.
-    METHODS refresh_data.
 
   PROTECTED SECTION.
+
+    DATA client TYPE REF TO z2ui5_if_client.
+
+    METHODS on_init.
+    METHODS display_view.
+    METHODS on_event.
+
   PRIVATE SECTION.
 ENDCLASS.
 
 CLASS z2ui5_cl_demo_app_006 IMPLEMENTATION.
 
-  METHOD refresh_data.
-
-    DO 10000 TIMES.
-      DATA ls_row TYPE ty_row.
-      ls_row-count = sy-index.
-      ls_row-value = `red`.
-      ls_row-descr = `this is a description`.
-      ls_row-checkbox = abap_true.
-      ls_row-valuecolor = `Good`.
-      INSERT ls_row INTO TABLE mt_tab.
-    ENDDO.
-  ENDMETHOD.
-
   METHOD z2ui5_if_app~main.
 
-    IF client->check_on_init( ).
-      refresh_data( ).
-    ENDIF.
+    me->client = client.
+    CASE abap_true.
+      WHEN client->check_on_init( ).
+        on_init( ).
+        display_view( ).
+      WHEN client->check_on_event( ).
+        on_event( ).
+    ENDCASE.
+
+  ENDMETHOD.
+
+  METHOD on_event.
 
     CASE client->get( )-event.
       WHEN `SORT_ASCENDING`.
@@ -55,21 +56,42 @@ CLASS z2ui5_cl_demo_app_006 IMPLEMENTATION.
         client->message_toast_display( `sort descending` ).
     ENDCASE.
 
-    DATA(lo_view) = z2ui5_cl_xml_view=>factory( ).
-    DATA(lo_page) = lo_view->shell(
+    client->model_update( ).
+
+  ENDMETHOD.
+
+  METHOD on_init.
+
+    DO 10000 TIMES.
+      DATA ls_row TYPE ty_row.
+      ls_row-count = sy-index.
+      ls_row-value = `red`.
+      ls_row-descr = `this is a description`.
+      ls_row-checkbox = abap_true.
+      ls_row-valuecolor = `Good`.
+      INSERT ls_row INTO TABLE mt_tab.
+    ENDDO.
+
+  ENDMETHOD.
+
+  METHOD display_view.
+
+    DATA(view) = z2ui5_cl_xml_view=>factory( ).
+    DATA(lo_page) = view->shell(
         )->page(
             title          = `abap2UI5 - Scroll Container with Table and Toolbar`
             navbuttonpress = client->_event_nav_app_leave( )
             shownavbutton  = client->check_app_prev_stack( ) ).
 
-    DATA(lo_tab) = lo_page->scroll_container( height   = `70%`
-                                        vertical = abap_true
-        )->table(
-            growing             = abap_true
-            growingthreshold    = `20`
-            growingscrolltoload = abap_true
-            items               = client->_bind_edit( mt_tab )
-            sticky              = `ColumnHeaders,HeaderToolbar` ).
+    DATA(lo_tab) = lo_page->scroll_container(
+        height   = `70%`
+        vertical = abap_true
+    )->table(
+        growing              = abap_true
+        growingthreshold     = `20`
+        growingscrolltoload  = abap_true
+        items                = client->_bind_edit( mt_tab )
+        sticky               = `ColumnHeaders,HeaderToolbar` ).
 
     lo_tab->header_toolbar(
         )->toolbar(
@@ -119,6 +141,6 @@ CLASS z2ui5_cl_demo_app_006 IMPLEMENTATION.
                     enabled  = abap_false
        )->text( `{COUNT}` ).
 
-    client->view_display( lo_view->stringify( ) ).
+    client->view_display( view->stringify( ) ).
   ENDMETHOD.
 ENDCLASS.

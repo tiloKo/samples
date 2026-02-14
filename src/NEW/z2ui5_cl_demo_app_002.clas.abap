@@ -114,14 +114,13 @@ CLASS z2ui5_cl_demo_app_002 IMPLEMENTATION.
   METHOD display_view.
 
     DATA(view) = z2ui5_cl_xml_view=>factory( ).
-    DATA(lo_page) = view->shell(
-         )->page(
-          showheader       = xsdbool( abap_false = client->get( )-check_launchpad_active )
+    view->shell(
+        )->page(
             title          = `abap2UI5 - Selection-Screen Example`
             navbuttonpress = client->_event_nav_app_leave( )
             shownavbutton  = client->check_app_prev_stack( ) ).
 
-    DATA(lo_grid) = lo_page->grid( `L6 M12 S12`
+    DATA(lo_grid) = view->grid( `L6 M12 S12`
         )->content( `layout` ).
 
     lo_grid->simple_form( title    = `Input`
@@ -129,11 +128,11 @@ CLASS z2ui5_cl_demo_app_002 IMPLEMENTATION.
         )->content( `form`
             )->label( `Input with suggestion items`
             )->input(
-                    id              = `suggInput`
-                    value           = client->_bind_edit( screen-colour )
-                    placeholder     = `Fill in your favorite color`
+                    id               = `suggInput`
+                    value            = client->_bind_edit( ms_screen-colour )
+                    placeholder      = `Fill in your favorite color`
                     suggestionitems = client->_bind( mt_suggestion )
-                    showsuggestion  = abap_true )->get(
+                    showsuggestion   = abap_true )->get(
                 )->suggestion_items( )->get(
                     )->list_item(
                         text           = `{VALUE}`
@@ -143,22 +142,23 @@ CLASS z2ui5_cl_demo_app_002 IMPLEMENTATION.
                        editable = abap_true
         )->content( `form`
             )->label( `Date`
-            )->date_picker( client->_bind_edit( screen-date )
+            )->date_picker( client->_bind_edit( ms_screen-date )
             )->label( `Date and Time`
-            )->date_time_picker( client->_bind_edit( screen-date_time )
+            )->date_time_picker( client->_bind_edit( ms_screen-date_time )
             )->label( `Time Begin/End`
-            )->time_picker( client->_bind_edit( screen-time_start )
-            )->time_picker( client->_bind_edit( screen-time_end ) ).
+            )->time_picker( client->_bind_edit( ms_screen-time_start )
+            )->time_picker( client->_bind_edit( ms_screen-time_end ) ).
 
-    DATA(lo_form) = lo_grid->get_parent( )->get_parent( )->grid( `L12 M12 S12`
-        )->content( `layout`
-            )->simple_form( title    = `Input with select options`
-                            editable = abap_true
+    DATA(lo_form) = view->grid( `L12 M12 S12` 
+        )->content( `layout` 
+        )->simple_form(
+            title    = `Input with select options`
+            editable = abap_true
                 )->content( `form` ).
 
     DATA(lv_test) = lo_form->label( `Checkbox`
          )->checkbox(
-             selected = client->_bind_edit( screen-check_is_active )
+             selected = client->_bind_edit( ms_screen-check_is_active )
              text     = `this is a checkbox`
              enabled  = abap_true ).
 
@@ -170,7 +170,7 @@ CLASS z2ui5_cl_demo_app_002 IMPLEMENTATION.
 
     lv_test->label( `Combobox`
       )->combobox(
-          selectedkey = client->_bind_edit( screen-combo_key )
+          selectedkey = client->_bind_edit( ms_screen-combo_key )
           items       = client->_bind( mt_combo )
               )->item(
                   key  = `{KEY}`
@@ -179,7 +179,7 @@ CLASS z2ui5_cl_demo_app_002 IMPLEMENTATION.
 
     lv_test->label( `Combobox2`
       )->combobox(
-          selectedkey = client->_bind_edit( screen-combo_key2 )
+          selectedkey = client->_bind_edit( ms_screen-combo_key2 )
           items       = client->_bind( mt_combo )
               )->item(
                   key  = `{KEY}`
@@ -187,7 +187,7 @@ CLASS z2ui5_cl_demo_app_002 IMPLEMENTATION.
       )->get_parent( )->get_parent( ).
 
     lv_test->label( `Segmented Button`
-      )->segmented_button( selected_key = client->_bind_edit( screen-segment_key )
+      )->segmented_button( selectedkey = client->_bind_edit( ms_screen-segment_key )
         )->items(
             )->segmented_button_item(
                 key  = `BLUE`
@@ -209,17 +209,18 @@ CLASS z2ui5_cl_demo_app_002 IMPLEMENTATION.
         customtextoff = `B`
       )->label( `Switch accept/reject`
       )->switch(
-        state         = client->_bind_edit( screen-check_switch_01 )
+        state         = client->_bind_edit( ms_screen-check_switch_01 )
         customtexton  = `on`
         customtextoff = `off`
         type          = `AcceptReject`
       )->label( `Switch normal`
       )->switch(
-        state         = client->_bind_edit( screen-check_switch_02 )
+        state         = client->_bind_edit( ms_screen-check_switch_02 )
         customtexton  = `YES`
         customtextoff = `NO` ).
 
-    lo_page->footer( )->overflow_toolbar(
+    view->page(
+        )->footer( )->overflow_toolbar(
          )->toolbar_spacer(
          )->button(
              text  = `Clear`

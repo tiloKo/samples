@@ -1,9 +1,14 @@
 CLASS z2ui5_cl_demo_app_010 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
+
     INTERFACES z2ui5_if_app.
 
   PROTECTED SECTION.
+
+    DATA client TYPE REF TO z2ui5_if_client.
+    METHODS display_view.
+
   PRIVATE SECTION.
 ENDCLASS.
 
@@ -11,8 +16,15 @@ CLASS z2ui5_cl_demo_app_010 IMPLEMENTATION.
 
   METHOD z2ui5_if_app~main.
 
-    DATA(lo_view) = z2ui5_cl_xml_view=>factory( ).
-    DATA(lo_page) = lo_view->shell(
+    me->client = client.
+    display_view( ).
+
+  ENDMETHOD.
+
+  METHOD display_view.
+
+    DATA(view) = z2ui5_cl_xml_view=>factory( ).
+    DATA(lo_page) = view->shell(
         )->page(
             title          = `abap2UI5 - Demo Layout`
             navbuttonpress = client->_event_nav_app_leave( )
@@ -75,11 +87,12 @@ CLASS z2ui5_cl_demo_app_010 IMPLEMENTATION.
             )->text( `text`
             )->link( text = `link`
                      href = `https://twitter.com/abap2UI5`
-            )->button( text = `reject`
-                       type = `Reject`
-            )->button( text = `accept`
-                       type = `Success` ).
+            )->button( text  = `reject`
+           type  = `Reject`
+    )->button( text  = `accept`
+           type  = `Success` ).
 
-    client->view_display( lo_view->stringify( ) ).
+    client->view_display( view->stringify( ) ).
+    
   ENDMETHOD.
 ENDCLASS.

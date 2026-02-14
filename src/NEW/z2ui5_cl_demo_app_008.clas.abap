@@ -8,6 +8,13 @@ CLASS z2ui5_cl_demo_app_008 DEFINITION PUBLIC.
     DATA mv_strip_type TYPE string.
 
   PROTECTED SECTION.
+
+    DATA client TYPE REF TO z2ui5_if_client.
+
+    METHODS on_init.
+    METHODS display_view.
+    METHODS on_event.
+
   PRIVATE SECTION.
 ENDCLASS.
 
@@ -15,46 +22,84 @@ CLASS z2ui5_cl_demo_app_008 IMPLEMENTATION.
 
   METHOD z2ui5_if_app~main.
 
+    me->client = client.
+    CASE abap_true.
+      WHEN client->check_on_init( ).
+        on_init( ).
+        display_view( ).
+      WHEN client->check_on_event( ).
+        on_event( ).
+    ENDCASE.
+
+  ENDMETHOD.
+
+  METHOD on_init.
+
+    mv_check_strip_active = abap_false.
+
+  ENDMETHOD.
+
+  METHOD on_event.
+
     CASE client->get( )-event.
       WHEN `BUTTON_MESSAGE_BOX_CONFIRM`.
-        client->message_box_display( text = `Approve purchase order 12345?`
-                                     type = `confirm` ).
+        client->message_box_display(
+          text   = `Approve purchase order 12345?`
+          type   = `confirm`
+        ).
       WHEN `BUTTON_MESSAGE_BOX_ALERT`.
-        client->message_box_display( text = `The quantity you have reported exceeds the quantity planned.`
-                                     type = `alert` ).
+        client->message_box_display(
+          text   = `The quantity you have reported exceeds quantity planned.`
+          type   = `alert`
+        ).
       WHEN `BUTTON_MESSAGE_BOX_ERROR`.
-        client->message_box_display( text                                                   = `Select a team in the "Development" area.` && cl_abap_char_utilities=>cr_lf &&
-                                            `"Marketing" isn’t assigned to this area.` type = `error` ).
+        client->message_box_display(
+          text   = `Select a team in the "Development" area.` && cl_abap_char_utilities=>cr_lf &&
+                   `"Marketing" isn't assigned to this area.`
+          type   = `error`
+        ).
       WHEN `BUTTON_MESSAGE_BOX_INFO`.
-        client->message_box_display( `Your booking will be reserved for 24 hours.` ).
+        client->message_box_display(
+          `Your booking will be reserved for 24 hours.`
+        ).
       WHEN `BUTTON_MESSAGE_BOX_WARNING`.
-        client->message_box_display( text = `The project schedule was last updated over a year ago.`
-                                     type = `warning` ).
+        client->message_box_display(
+          text   = `The project schedule was last updated over a year ago.`
+          type   = `warning`
+        ).
       WHEN `BUTTON_MESSAGE_BOX_SUCCESS`.
-        client->message_box_display( text = `Project 1234567 was created and assigned to team "ABC".`
-                                     type = `success` ).
+        client->message_box_display(
+          text   = `Project 1234567 was created and assigned to team "ABC".`
+          type   = `success`
+        ).
       WHEN `BUTTON_MESSAGE_TOAST`.
         client->message_toast_display( `this is a message toast` ).
       WHEN `BUTTON_MESSAGE_TOAST2`.
         client->message_toast_display( text                    = `this is a message toast`
                                        at                      = `left bottom`
-            offset                                             = `0 -15`
+                                       offset                  = `0 -15`
                                        animationtimingfunction = `ease-in`
                                        class                   = `my-style` ).
       WHEN `BUTTON_MESSAGE_STRIP_INFO`.
         mv_check_strip_active = abap_true.
         mv_strip_type = `Information`.
+        display_view( ).
       WHEN `BUTTON_MESSAGE_STRIP_ERROR`.
         mv_check_strip_active = abap_true.
         mv_strip_type = `Error`.
+        display_view( ).
       WHEN `BUTTON_MESSAGE_STRIP_SUCCESS`.
         mv_check_strip_active = abap_true.
         mv_strip_type = `Success`.
+         display_view( ).
     ENDCASE.
 
-    DATA(lo_view) = z2ui5_cl_xml_view=>factory( ).
+  ENDMETHOD.
 
-    DATA(lo_page) = lo_view->shell(
+  METHOD display_view.
+
+    DATA(view) = z2ui5_cl_xml_view=>factory( ).
+    DATA(lo_page) = view->shell(
         )->page(
             title           = `abap2UI5 - Messages`
             navbuttonpress  = client->_event_nav_app_leave( )
@@ -65,7 +110,7 @@ CLASS z2ui5_cl_demo_app_008 IMPLEMENTATION.
 
     IF mv_check_strip_active = abap_true.
       lo_page->message_strip( text = `This is a Message Strip`
-                           type = mv_strip_type ).
+                           type = client->bind( mv_strip_type  ) ).
     ENDIF.
 
     lo_page->grid( `L6 M12 S12`
@@ -113,6 +158,8 @@ CLASS z2ui5_cl_demo_app_008 IMPLEMENTATION.
                     text  = `Message Toast Customized`
                     press = client->_event( `BUTTON_MESSAGE_TOAST2` ) ).
 
-    client->view_display( lo_view->stringify( ) ).
+    client->view_display( view->stringify( ) ).
+
   ENDMETHOD.
+
 ENDCLASS.

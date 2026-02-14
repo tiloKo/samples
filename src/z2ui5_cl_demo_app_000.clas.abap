@@ -72,7 +72,7 @@ CLASS z2ui5_cl_demo_app_000 IMPLEMENTATION.
     ENDIF.
 
     lo_page->_z2ui5( )->scrolling( setupdate = client->_bind_edit( mv_set_scroll )
-                                items     = client->_bind_edit( mt_scroll ) ).
+                                   items     = client->_bind_edit( mt_scroll ) ).
 
     lo_page = lo_page->grid( `L12 M12 S12`
          )->content( `layout` ).
