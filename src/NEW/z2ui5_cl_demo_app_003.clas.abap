@@ -5,7 +5,7 @@ CLASS z2ui5_cl_demo_app_003 DEFINITION PUBLIC.
     INTERFACES z2ui5_if_app.
 
     TYPES:
-      BEGIN OF ty_row,
+      BEGIN OF ty_s_row,
         title    TYPE string,
         value    TYPE string,
         descr    TYPE string,
@@ -13,9 +13,9 @@ CLASS z2ui5_cl_demo_app_003 DEFINITION PUBLIC.
         info     TYPE string,
         selected TYPE abap_bool,
         checkbox TYPE abap_bool,
-      END OF ty_row.
+      END OF ty_s_row.
 
-    DATA mt_tab TYPE STANDARD TABLE OF ty_row WITH EMPTY KEY.
+    DATA mt_tab TYPE STANDARD TABLE OF ty_s_row WITH EMPTY KEY.
 
   PROTECTED SECTION.
 
@@ -58,7 +58,7 @@ CLASS z2ui5_cl_demo_app_003 IMPLEMENTATION.
   METHOD display_view.
 
     DATA(view) = z2ui5_cl_xml_view=>factory( ).
-    client->view_display( view->shell(
+    view->shell(
         )->page(
             title           = `abap2UI5 - List`
             navbuttonpress  = client->_event_nav_app_leave( )
@@ -74,8 +74,8 @@ CLASS z2ui5_cl_demo_app_003 IMPLEMENTATION.
                 icon        = `{ICON}`
                 info        = `{INFO}`
                 press       = client->_event( `TEST` )
-                selected    = `{SELECTED}`
-            )->stringify( ) ).
+                selected    = `{SELECTED}` ).
+    client->view_display( view->stringify( ) ).
             
   ENDMETHOD.
 
