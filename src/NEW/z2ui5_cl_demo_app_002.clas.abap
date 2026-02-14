@@ -31,17 +31,16 @@ CLASS z2ui5_cl_demo_app_002 DEFINITION PUBLIC.
         key  TYPE string,
         text TYPE string,
       END OF s_combobox.
-
     TYPES ty_t_combo TYPE STANDARD TABLE OF s_combobox WITH EMPTY KEY.
-
-    DATA mo_client TYPE REF TO z2ui5_if_client.
     DATA mt_combo TYPE ty_t_combo.
 
   PROTECTED SECTION.
 
-    METHODS on_rendering.
-    METHODS on_event.
+    DATA client TYPE REF TO z2ui5_if_client.
+
     METHODS on_init.
+    METHODS display_view.
+    METHODS on_event.
 
   PRIVATE SECTION.
 ENDCLASS.
@@ -50,44 +49,44 @@ CLASS z2ui5_cl_demo_app_002 IMPLEMENTATION.
 
   METHOD z2ui5_if_app~main.
 
-    me->mo_client = client.
+    me->client = client.
+    CASE abap_true.
+      WHEN client->check_on_init( ).
+        on_init( ).
+        display_view( ).
+      WHEN client->check_on_event( ).
+        on_event( ).
+    ENDCASE.
 
-    IF mo_client->check_on_init( ).
-      on_init( ).
-      on_rendering( ).
-      RETURN.
-    ENDIF.
-
-    on_event( ).
   ENDMETHOD.
 
   METHOD on_event.
 
-    CASE mo_client->get( )-event.
+    CASE client->get( )-event.
       WHEN `BUTTON_MCONFIRM`.
-        mo_client->message_box_display( type = `confirm`
+        client->message_box_display( type = `confirm`
                                      text = `Confirm MessageBox` ).
       WHEN `BUTTON_MALERT`.
-        mo_client->message_box_display( type = `alert`
+        client->message_box_display( type = `alert`
                                      text = `Alert MessageBox` ).
       WHEN `BUTTON_MERROR`.
-        mo_client->message_box_display( type = `error`
+        client->message_box_display( type = `error`
                                      text = `Error MessageBox` ).
       WHEN `BUTTON_MINFO`.
-        mo_client->message_box_display( type = `information`
+        client->message_box_display( type = `information`
                                      text = `Information MessageBox` ).
       WHEN `BUTTON_MWARNING`.
-        mo_client->message_box_display( type = `warning`
+        client->message_box_display( type = `warning`
                                      text = `Warning MessageBox` ).
       WHEN `BUTTON_MSUCCESS`.
-        mo_client->message_box_display( type = `success`
+        client->message_box_display( type = `success`
                                      text = `Success MessageBox`
                                      icon = `sap-icon://accept` ).
       WHEN `BUTTON_SEND`.
-        mo_client->message_box_display( `success - values send to the server` ).
+        client->message_box_display( `success - values send to the server` ).
       WHEN `BUTTON_CLEAR`.
         CLEAR screen.
-        mo_client->message_toast_display( `View initialized` ).
+        client->message_toast_display( `View initialized` ).
     ENDCASE.
   ENDMETHOD.
 
@@ -112,15 +111,15 @@ CLASS z2ui5_cl_demo_app_002 IMPLEMENTATION.
         ( descr = `Blue3`  value = `BLUE3` ) ).
   ENDMETHOD.
 
-  METHOD on_rendering.
+  METHOD display_view.
 
-    DATA(lo_view) = z2ui5_cl_xml_view=>factory( ).
-    DATA(lo_page) = lo_view->shell(
+    DATA(view) = z2ui5_cl_xml_view=>factory( ).
+    DATA(lo_page) = view->shell(
          )->page(
-          showheader       = xsdbool( abap_false = mo_client->get( )-check_launchpad_active )
+          showheader       = xsdbool( abap_false = client->get( )-check_launchpad_active )
             title          = `abap2UI5 - Selection-Screen Example`
-            navbuttonpress = mo_client->_event_nav_app_leave( )
-            shownavbutton  = mo_client->check_app_prev_stack( ) ).
+            navbuttonpress = client->_event_nav_app_leave( )
+            shownavbutton  = client->check_app_prev_stack( ) ).
 
     DATA(lo_grid) = lo_page->grid( `L6 M12 S12`
         )->content( `layout` ).
@@ -131,9 +130,9 @@ CLASS z2ui5_cl_demo_app_002 IMPLEMENTATION.
             )->label( `Input with suggestion items`
             )->input(
                     id              = `suggInput`
-                    value           = mo_client->_bind_edit( screen-colour )
+                    value           = client->_bind_edit( screen-colour )
                     placeholder     = `Fill in your favorite color`
-                    suggestionitems = mo_client->_bind( mt_suggestion )
+                    suggestionitems = client->_bind( mt_suggestion )
                     showsuggestion  = abap_true )->get(
                 )->suggestion_items( )->get(
                     )->list_item(
@@ -144,12 +143,12 @@ CLASS z2ui5_cl_demo_app_002 IMPLEMENTATION.
                        editable = abap_true
         )->content( `form`
             )->label( `Date`
-            )->date_picker( mo_client->_bind_edit( screen-date )
+            )->date_picker( client->_bind_edit( screen-date )
             )->label( `Date and Time`
-            )->date_time_picker( mo_client->_bind_edit( screen-date_time )
+            )->date_time_picker( client->_bind_edit( screen-date_time )
             )->label( `Time Begin/End`
-            )->time_picker( mo_client->_bind_edit( screen-time_start )
-            )->time_picker( mo_client->_bind_edit( screen-time_end ) ).
+            )->time_picker( client->_bind_edit( screen-time_start )
+            )->time_picker( client->_bind_edit( screen-time_end ) ).
 
     DATA(lo_form) = lo_grid->get_parent( )->get_parent( )->grid( `L12 M12 S12`
         )->content( `layout`
@@ -159,7 +158,7 @@ CLASS z2ui5_cl_demo_app_002 IMPLEMENTATION.
 
     DATA(lv_test) = lo_form->label( `Checkbox`
          )->checkbox(
-             selected = mo_client->_bind_edit( screen-check_is_active )
+             selected = client->_bind_edit( screen-check_is_active )
              text     = `this is a checkbox`
              enabled  = abap_true ).
 
@@ -171,8 +170,8 @@ CLASS z2ui5_cl_demo_app_002 IMPLEMENTATION.
 
     lv_test->label( `Combobox`
       )->combobox(
-          selectedkey = mo_client->_bind_edit( screen-combo_key )
-          items       = mo_client->_bind( mt_combo )
+          selectedkey = client->_bind_edit( screen-combo_key )
+          items       = client->_bind( mt_combo )
               )->item(
                   key  = `{KEY}`
                   text = `{TEXT}`
@@ -180,15 +179,15 @@ CLASS z2ui5_cl_demo_app_002 IMPLEMENTATION.
 
     lv_test->label( `Combobox2`
       )->combobox(
-          selectedkey = mo_client->_bind_edit( screen-combo_key2 )
-          items       = mo_client->_bind( mt_combo )
+          selectedkey = client->_bind_edit( screen-combo_key2 )
+          items       = client->_bind( mt_combo )
               )->item(
                   key  = `{KEY}`
                   text = `{TEXT}`
       )->get_parent( )->get_parent( ).
 
     lv_test->label( `Segmented Button`
-      )->segmented_button( selected_key = mo_client->_bind_edit( screen-segment_key )
+      )->segmented_button( selected_key = client->_bind_edit( screen-segment_key )
         )->items(
             )->segmented_button_item(
                 key  = `BLUE`
@@ -210,13 +209,13 @@ CLASS z2ui5_cl_demo_app_002 IMPLEMENTATION.
         customtextoff = `B`
       )->label( `Switch accept/reject`
       )->switch(
-        state         = mo_client->_bind_edit( screen-check_switch_01 )
+        state         = client->_bind_edit( screen-check_switch_01 )
         customtexton  = `on`
         customtextoff = `off`
         type          = `AcceptReject`
       )->label( `Switch normal`
       )->switch(
-        state         = mo_client->_bind_edit( screen-check_switch_02 )
+        state         = client->_bind_edit( screen-check_switch_02 )
         customtexton  = `YES`
         customtextoff = `NO` ).
 
@@ -224,14 +223,15 @@ CLASS z2ui5_cl_demo_app_002 IMPLEMENTATION.
          )->toolbar_spacer(
          )->button(
              text  = `Clear`
-             press = mo_client->_event( `BUTTON_CLEAR` )
+             press = client->_event( `BUTTON_CLEAR` )
              type  = `Reject`
              icon  = `sap-icon://delete`
          )->button(
              text  = `Send to Server`
-             press = mo_client->_event( `BUTTON_SEND` )
+             press = client->_event( `BUTTON_SEND` )
              type  = `Success` ).
 
-    mo_client->view_display( lo_view->stringify( ) ).
+    client->view_display( view->stringify( ) ).
+
   ENDMETHOD.
 ENDCLASS.
