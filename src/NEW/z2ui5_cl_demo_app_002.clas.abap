@@ -5,7 +5,7 @@ CLASS z2ui5_cl_demo_app_002 DEFINITION PUBLIC.
     INTERFACES z2ui5_if_app.
 
     DATA:
-      BEGIN OF screen,
+      BEGIN OF ms_screen,
         check_is_active TYPE abap_bool,
         colour          TYPE string,
         combo_key       TYPE string,
@@ -17,21 +17,21 @@ CLASS z2ui5_cl_demo_app_002 DEFINITION PUBLIC.
         time_end        TYPE string,
         check_switch_01 TYPE abap_bool VALUE abap_false,
         check_switch_02 TYPE abap_bool VALUE abap_false,
-      END OF screen.
+      END OF ms_screen.
 
     TYPES:
-      BEGIN OF s_suggestion_items,
+      BEGIN OF ty_s_suggestion_items,
         value TYPE string,
         descr TYPE string,
-      END OF s_suggestion_items.
-    DATA mt_suggestion TYPE STANDARD TABLE OF s_suggestion_items WITH EMPTY KEY.
+      END OF ty_s_suggestion_items.
+    DATA mt_suggestion TYPE STANDARD TABLE OF ty_s_suggestion_items WITH EMPTY KEY.
 
     TYPES:
-      BEGIN OF s_combobox,
+      BEGIN OF ty_s_combobox,
         key  TYPE string,
         text TYPE string,
-      END OF s_combobox.
-    TYPES ty_t_combo TYPE STANDARD TABLE OF s_combobox WITH EMPTY KEY.
+      END OF ty_s_combobox.
+    TYPES ty_t_combo TYPE STANDARD TABLE OF ty_s_combobox WITH EMPTY KEY.
     DATA mt_combo TYPE ty_t_combo.
 
   PROTECTED SECTION.
