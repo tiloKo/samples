@@ -35,40 +35,40 @@ CLASS z2ui5_cl_demo_app_354 IMPLEMENTATION.
 
     DATA(view) = z2ui5_cl_xml_view_generic=>factory( ).
 
-    DATA(page) = view->add( n = `Shell`
-      )->add( n = `Page`
-              p = VALUE #( ( n = `title`          v = `abap2UI5 - Generic XML View Builder` )
-                           ( n = `navButtonPress` v = client->_event( `BACK` ) )
-                           ( n = `showNavButton`  v = client->check_app_prev_stack( ) ) ) ).
+    DATA(page) = view->_( `Shell`
+      )->_( n = `Page`
+            p = VALUE #( ( n = `title`          v = `abap2UI5 - Generic XML View Builder` )
+                         ( n = `navButtonPress` v = client->_event( `BACK` ) )
+                         ( n = `showNavButton`  v = client->check_app_prev_stack( ) ) ) ).
 
-    DATA(content) = page->add( n  = `SimpleForm`
-                               ns = `form`
-                               p  = VALUE #( ( n = `title`    v = `Generic Builder Demo` )
-                                             ( n = `editable` v = `true` ) )
-      )->add( n  = `content`
-              ns = `form` ).
+    DATA(content) = page->_( n  = `SimpleForm`
+                             ns = `form`
+                             p  = VALUE #( ( n = `title`    v = `Generic Builder Demo` )
+                                           ( n = `editable` v = `true` ) )
+      )->_( n  = `content`
+            ns = `form` ).
 
-    content->leaf( n  = `Title`
-                   ns = `core`
-                   p  = VALUE #( ( n = `text` v = `Input` ) ) ).
+    content->__( n  = `Title`
+                 ns = `core`
+                 p  = VALUE #( ( n = `text` v = `Input` ) ) ).
 
-    content->leaf( n = `Label`
-                   p = VALUE #( ( n = `text` v = `Name` ) ) ).
+    content->__( n = `Label`
+                 p = VALUE #( ( n = `text` v = `Name` ) ) ).
 
-    content->leaf( n = `Input`
-                   p = VALUE #( ( n = `value` v = client->_bind_edit( name ) ) ) ).
+    content->__( n = `Input`
+                 p = VALUE #( ( n = `value` v = client->_bind_edit( name ) ) ) ).
 
-    content->leaf( n = `Label`
-                   p = VALUE #( ( n = `text` v = `Quantity` ) ) ).
+    content->__( n = `Label`
+                 p = VALUE #( ( n = `text` v = `Quantity` ) ) ).
 
-    content->leaf( n = `Input`
-                   p = VALUE #( ( n = `value` v = client->_bind_edit( quantity ) ) ) ).
+    content->__( n = `Input`
+                 p = VALUE #( ( n = `value` v = client->_bind_edit( quantity ) ) ) ).
 
-    content->leaf( n = `Button`
-                   p = VALUE #( ( n = `text`  v = `Send` )
-                                ( n = `press` v = client->_event( `POST` ) )
-                                ( n = `icon`  v = `sap-icon://paper-plane` )
-                                ( n = `type`  v = `Emphasized` ) ) ).
+    content->__( n = `Button`
+                 p = VALUE #( ( n = `text`  v = `Send` )
+                              ( n = `press` v = client->_event( `POST` ) )
+                              ( n = `icon`  v = `sap-icon://paper-plane` )
+                              ( n = `type`  v = `Emphasized` ) ) ).
 
     client->view_display( view->stringify( ) ).
 
