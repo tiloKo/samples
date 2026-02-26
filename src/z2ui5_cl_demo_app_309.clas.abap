@@ -7,7 +7,6 @@ CLASS z2ui5_cl_demo_app_309 DEFINITION
 
     INTERFACES z2ui5_if_app .
 
-    DATA mv_initialized TYPE abap_bool.
     DATA mv_url TYPE string.
 
     METHODS on_event.
@@ -68,11 +67,8 @@ CLASS Z2UI5_CL_DEMO_APP_309 IMPLEMENTATION.
 
     me->client = client.
 
-    IF mv_initialized = abap_false.
-      mv_initialized = abap_true.
-
+    IF client->check_on_init( ).
       view_display( ).
-
     ENDIF.
 
     on_event( ).

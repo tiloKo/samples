@@ -7,7 +7,6 @@ CLASS z2ui5_cl_demo_app_196 DEFINITION
 
     INTERFACES z2ui5_if_app .
 
-    DATA is_initialized TYPE abap_bool .
     DATA mv_slider_value TYPE i .
 
     TYPES: BEGIN OF ty_shape,
@@ -180,12 +179,9 @@ CLASS Z2UI5_CL_DEMO_APP_196 IMPLEMENTATION.
 
     me->client = client.
 
-    IF is_initialized = abap_false.
-
+    IF client->check_on_init( ).
       initialize( ).
       render_screen( ).
-      is_initialized = abap_true.
-
     ENDIF.
 
     on_event( ).

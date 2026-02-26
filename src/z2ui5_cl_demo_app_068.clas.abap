@@ -27,7 +27,6 @@ CLASS z2ui5_cl_demo_app_068 DEFINITION
       ty_prodh_nodes TYPE STANDARD TABLE OF ty_prodh_node_level1 WITH DEFAULT KEY.
 
     DATA prodh_nodes    TYPE ty_prodh_nodes.
-    DATA is_initialized TYPE abap_bool.
 
     METHODS ui5_display_view
       IMPORTING
@@ -123,8 +122,7 @@ CLASS Z2UI5_CL_DEMO_APP_068 IMPLEMENTATION.
 
     me->client = client.
 
-    IF is_initialized = abap_false.
-      is_initialized = abap_true.
+    IF client->check_on_init( ).
       ui5_initialize( ).
       ui5_display_view( client ).
     ENDIF.

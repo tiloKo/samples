@@ -8,7 +8,6 @@ CLASS z2ui5_cl_demo_app_202 DEFINITION
     INTERFACES z2ui5_if_app .
 
     DATA av_next TYPE string VALUE 'Step22' ##NO_TEXT.
-    DATA av_init TYPE abap_bool .
   PROTECTED SECTION.
     METHODS display_view
       IMPORTING
@@ -90,9 +89,8 @@ CLASS Z2UI5_CL_DEMO_APP_202 IMPLEMENTATION.
 
   METHOD z2ui5_if_app~main.
 
-    IF av_init = abap_false.
+    IF client->check_on_init( ).
       display_view( client ).
-      av_init = 'X'.
       RETURN.
     ENDIF.
 

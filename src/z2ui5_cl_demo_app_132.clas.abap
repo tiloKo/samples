@@ -8,8 +8,6 @@ CLASS z2ui5_cl_demo_app_132 DEFINITION
     DATA mv_view_display TYPE abap_bool.
     DATA mo_parent_view  TYPE REF TO z2ui5_cl_xml_view.
     DATA mv_perc         TYPE string.
-    DATA mv_init         TYPE abap_bool.
-
     METHODS set_app_data
       IMPORTING
         !count TYPE string
@@ -127,9 +125,7 @@ CLASS z2ui5_cl_demo_app_132 IMPLEMENTATION.
   METHOD z2ui5_if_app~main.
     me->client = client.
 
-    IF mv_init IS INITIAL.
-      mv_init = abap_true.
-
+    IF client->check_on_init( ).
       on_init( ).
 
     ENDIF.

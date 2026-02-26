@@ -18,7 +18,6 @@ CLASS z2ui5_cl_demo_app_027 DEFINITION PUBLIC.
     DATA client            TYPE REF TO z2ui5_if_client.
     DATA:
       BEGIN OF app,
-        check_initialized TYPE abap_bool,
         view_main         TYPE string,
         view_popup        TYPE string,
         s_get             TYPE z2ui5_if_types=>ty_s_get,
@@ -42,8 +41,7 @@ CLASS z2ui5_cl_demo_app_027 IMPLEMENTATION.
     app-s_get      = client->get( ).
     app-view_popup = ``.
 
-    IF app-check_initialized = abap_false.
-      app-check_initialized = abap_true.
+    IF client->check_on_init( ).
       z2ui5_on_init( ).
     ENDIF.
 

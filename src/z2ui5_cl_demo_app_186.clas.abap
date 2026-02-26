@@ -8,7 +8,6 @@ CLASS z2ui5_cl_demo_app_186 DEFINITION
 
     INTERFACES z2ui5_if_app .
 
-    DATA is_initialized TYPE abap_bool .
     DATA file_content_64 TYPE string .
     DATA file_name TYPE string .
     DATA mime_type TYPE string .
@@ -108,12 +107,9 @@ CLASS Z2UI5_CL_DEMO_APP_186 IMPLEMENTATION.
 
     me->client = client.
 
-    IF is_initialized = abap_false.
-
+    IF client->check_on_init( ).
       initialize( ).
       render_screen( ).
-      is_initialized = abap_true.
-
     ENDIF.
 
     on_event( ).
