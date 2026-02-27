@@ -33,36 +33,33 @@ CLASS z2ui5_cl_demo_app_354 IMPLEMENTATION.
 
   METHOD render.
 
-    DATA(view) = z2ui5_cl_xml_view_generic=>factory( ).
+    DATA(view) = z2ui5_cl_xml_view_generic=>factory(
+        t_ns = VALUE #( ( n = `xmlns:form` v = `sap.ui.layout.form` ) ) ).
 
-    DATA(page) = view->_( `Shell`
+    DATA(content) = view->_( `Shell`
       )->_( n = `Page`
             p = VALUE #( ( n = `title`          v = `abap2UI5 - Generic XML View Builder` )
                          ( n = `navButtonPress` v = client->_event( `BACK` ) )
-                         ( n = `showNavButton`  v = client->check_app_prev_stack( ) ) ) ).
-
-    DATA(content) = page->_( n  = `SimpleForm`
-                             ns = `form`
-                             p  = VALUE #( ( n = `title`    v = `Generic Builder Demo` )
-                                           ( n = `editable` v = `true` ) )
+                         ( n = `showNavButton`  v = client->check_app_prev_stack( ) ) )
+      )->_( n  = `SimpleForm`
+            ns = `form`
+            p  = VALUE #( ( n = `title`    v = `Generic Builder Demo` )
+                          ( n = `editable` v = `true` ) )
       )->_( n  = `content`
             ns = `form` ).
 
     content->__( n  = `Title`
                  ns = `core`
-                 p  = VALUE #( ( n = `text` v = `Input` ) ) ).
+                 a  = `text`
+                 v  = `Input` ).
 
-    content->__( n = `Label`
-                 p = VALUE #( ( n = `text` v = `Name` ) ) ).
+    content->__( n = `Label` a = `text` v = `Name` ).
 
-    content->__( n = `Input`
-                 p = VALUE #( ( n = `value` v = client->_bind_edit( name ) ) ) ).
+    content->__( n = `Input` a = `value` v = client->_bind_edit( name ) ).
 
-    content->__( n = `Label`
-                 p = VALUE #( ( n = `text` v = `Quantity` ) ) ).
+    content->__( n = `Label` a = `text` v = `Quantity` ).
 
-    content->__( n = `Input`
-                 p = VALUE #( ( n = `value` v = client->_bind_edit( quantity ) ) ) ).
+    content->__( n = `Input` a = `value` v = client->_bind_edit( quantity ) ).
 
     content->__( n = `Button`
                  p = VALUE #( ( n = `text`  v = `Send` )
