@@ -7,6 +7,7 @@ CLASS z2ui5_cl_demo_app_354 DEFINITION
 
     DATA name     TYPE string.
     DATA quantity TYPE string.
+    DATA is_admin TYPE abap_bool.
 
   PRIVATE SECTION.
     DATA client TYPE REF TO z2ui5_if_client.
@@ -61,11 +62,16 @@ CLASS z2ui5_cl_demo_app_354 IMPLEMENTATION.
 
     content->__( n = `Input` a = `value` v = client->_bind_edit( quantity ) ).
 
-    content->__( n = `Button`
-                 p = VALUE #( ( n = `text`  v = `Send` )
-                              ( n = `press` v = client->_event( `POST` ) )
-                              ( n = `icon`  v = `sap-icon://paper-plane` )
-                              ( n = `type`  v = `Emphasized` ) ) ).
+    content->__if( when = is_admin
+                   n    = `Input`
+                   a    = `value`
+                   v    = `Admin Secret` ).
+
+    content->_( n = `Button` a = `text` v = `Send`
+      )->p( n = `press` v = client->_event( `POST` )
+      )->p( n = `icon`  v = `sap-icon://paper-plane`
+      )->p( n = `type`  v = `Emphasized`
+      )->n( `content` ).
 
     client->view_display( view->stringify( ) ).
 
