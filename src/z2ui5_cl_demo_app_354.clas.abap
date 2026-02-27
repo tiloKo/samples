@@ -34,7 +34,7 @@ CLASS z2ui5_cl_demo_app_354 IMPLEMENTATION.
 
   METHOD render.
 
-    DATA(view) = z2ui5_cl_xml_view_generic=>factory(
+    DATA(view) = z2ui5_cl_util_xml=>factory(
         t_ns = VALUE #( ( n = `xmlns:form` v = `sap.ui.layout.form` ) ) ).
 
     DATA(content) = view->_( `Shell`
