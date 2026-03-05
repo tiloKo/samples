@@ -74,7 +74,7 @@ CLASS Z2UI5_CL_DEMO_APP_064 IMPLEMENTATION.
 
     me->client = client.
 
-    IF client->check_on_init( ).
+    IF client->check_on_init( ) IS NOT INITIAL.
       z2ui5_on_init( ).
       RETURN.
     ENDIF.
@@ -88,7 +88,7 @@ CLASS Z2UI5_CL_DEMO_APP_064 IMPLEMENTATION.
     DATA lt_arg TYPE string_table.
     DATA ls_arg TYPE string.
 
-    IF client->check_on_event( `LOAD` ).
+    IF client->check_on_event( `LOAD` ) IS NOT INITIAL.
 
       mv_percent = mv_percent + 25.
       mv_check_active = abap_true.

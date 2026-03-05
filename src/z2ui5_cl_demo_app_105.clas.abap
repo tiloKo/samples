@@ -35,7 +35,7 @@ CLASS Z2UI5_CL_DEMO_APP_105 IMPLEMENTATION.
 
   METHOD on_event.
 
-    IF client->check_on_event( 'MESSAGE_SUB' ).
+    IF client->check_on_event( 'MESSAGE_SUB' ) IS NOT INITIAL.
       client->message_box_display( `event sub app` ).
     ENDIF.
 
@@ -53,7 +53,7 @@ CLASS Z2UI5_CL_DEMO_APP_105 IMPLEMENTATION.
 
     me->client = client.
 
-    IF client->check_on_init( ).
+    IF client->check_on_init( ) IS NOT INITIAL.
       on_init( ).
       RETURN.
     ENDIF.

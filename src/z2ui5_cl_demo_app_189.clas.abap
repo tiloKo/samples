@@ -39,7 +39,8 @@ CLASS z2ui5_cl_demo_app_189 IMPLEMENTATION.
 
   METHOD render.
 
-    DATA(page) = z2ui5_cl_xml_view=>factory( )->shell(
+    DATA page TYPE REF TO z2ui5_cl_xml_view.
+    page = z2ui5_cl_xml_view=>factory( )->shell(
           )->page(
               title          = 'abap2UI5 - Focus II'
               navbuttonpress = client->_event_nav_app_leave( )
@@ -67,7 +68,7 @@ CLASS z2ui5_cl_demo_app_189 IMPLEMENTATION.
 
     me->client = client.
 
-    IF client->check_on_init( ).
+    IF client->check_on_init( ) IS NOT INITIAL.
       focus_field = 'IdOne'.
       render( ).
     ENDIF.

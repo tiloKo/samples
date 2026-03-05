@@ -45,7 +45,7 @@ CLASS Z2UI5_CL_DEMO_APP_095 IMPLEMENTATION.
 
   METHOD on_event.
 
-    IF client->check_on_event( 'BUTTON_SAVE' ).
+    IF client->check_on_event( 'BUTTON_SAVE' ) IS NOT INITIAL.
       client->message_box_display( `event main app` ).
     ENDIF.
 
@@ -70,7 +70,7 @@ CLASS Z2UI5_CL_DEMO_APP_095 IMPLEMENTATION.
 
   METHOD on_init_sub.
 
-    mo_app_sub = NEW #( ).
+    CREATE OBJECT mo_app_sub.
     mo_app_sub->mo_view_parent = mo_grid_sub.
     mo_app_sub->z2ui5_if_app~main( client = client ).
 
@@ -87,10 +87,12 @@ CLASS Z2UI5_CL_DEMO_APP_095 IMPLEMENTATION.
             navbuttonpress  = client->_event_nav_app_leave( )
               shownavbutton = abap_true ).
 
-    DATA(o_grid) = page->grid( 'L6 M12 S12'
+    DATA o_grid TYPE REF TO z2ui5_cl_xml_view.
+    o_grid = page->grid( 'L6 M12 S12'
         )->content( 'layout' ).
 
-    DATA(content) = o_grid->simple_form( title = 'Input'
+    DATA content TYPE REF TO z2ui5_cl_xml_view.
+    content = o_grid->simple_form( title = 'Input'
           )->content( 'form' ).
     content->label( 'main app'
       )->input(
@@ -124,7 +126,7 @@ CLASS Z2UI5_CL_DEMO_APP_095 IMPLEMENTATION.
 
     me->client = client.
 
-    IF client->check_on_init( ).
+    IF client->check_on_init( ) IS NOT INITIAL.
       on_init( ).
       on_init_sub( ).
       client->view_display( page->get_root( )->xml_get( ) ).

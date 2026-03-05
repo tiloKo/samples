@@ -19,7 +19,7 @@ CLASS z2ui5_cl_demo_app_269 IMPLEMENTATION.
   METHOD z2ui5_if_app~main.
     me->client = client.
 
-    IF client->check_on_init( ).
+    IF client->check_on_init( ) IS NOT INITIAL.
       display_view( ).
     ENDIF.
 
@@ -28,7 +28,8 @@ CLASS z2ui5_cl_demo_app_269 IMPLEMENTATION.
 
   METHOD display_view.
 
-    DATA(view) = z2ui5_cl_xml_view=>factory( ).
+    DATA view TYPE REF TO z2ui5_cl_xml_view.
+    view = z2ui5_cl_xml_view=>factory( ).
 
     view->shell_bar(
         title               = `Shell Bar`
@@ -53,7 +54,8 @@ CLASS z2ui5_cl_demo_app_269 IMPLEMENTATION.
             )->avatar( ns       = `f`
                        initials = 'UI' ).
 
-    DATA(xml) = view->stringify( ).
+    DATA xml TYPE string.
+    xml = view->stringify( ).
 
     client->view_display( xml ).
 

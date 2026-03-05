@@ -57,15 +57,17 @@ CLASS z2ui5_cl_demo_app_212 IMPLEMENTATION.
 
   METHOD on_event.
 
-    IF client->check_on_event( 'ROW_SELECT' ).
+    IF client->check_on_event( 'ROW_SELECT' ) IS NOT INITIAL.
       row_select( ).
     ENDIF.
   ENDMETHOD.
 
   METHOD row_select.
 
-    DATA(lt_arg) = client->get( )-t_event_arg.
-    READ TABLE lt_arg INTO DATA(ls_arg) INDEX 1.
+    DATA lt_arg TYPE string_table.
+    lt_arg = client->get( )-t_event_arg.
+    DATA ls_arg TYPE string.
+    READ TABLE lt_arg INTO ls_arg INDEX 1.
 
     IF sy-subrc <> 0.
       RETURN.
@@ -83,17 +85,21 @@ CLASS z2ui5_cl_demo_app_212 IMPLEMENTATION.
 
     ASSIGN mt_table->* TO <tab>.
 
-    ASSIGN <tab>[ index ] TO FIELD-SYMBOL(<row>).
+    FIELD-SYMBOLS <row> TYPE any.
+    READ TABLE <tab> INDEX index ASSIGNING <row>.
 
     IF sy-subrc <> 0.
       RETURN.
     ENDIF.
 
-    LOOP AT mt_dfies INTO DATA(dfies).
+    DATA dfies LIKE LINE OF mt_dfies.
+    LOOP AT mt_dfies INTO dfies.
 
-      ASSIGN COMPONENT dfies-fieldname OF STRUCTURE <row> TO FIELD-SYMBOL(<value_tab>).
+      FIELD-SYMBOLS <value_tab> TYPE any.
+      ASSIGN COMPONENT dfies-fieldname OF STRUCTURE <row> TO <value_tab>.
       ASSIGN ms_table_row->* TO <table_row>.
-      ASSIGN COMPONENT dfies-fieldname OF STRUCTURE <table_row> TO FIELD-SYMBOL(<value_struc>).
+      FIELD-SYMBOLS <value_struc> TYPE any.
+      ASSIGN COMPONENT dfies-fieldname OF STRUCTURE <table_row> TO <value_struc>.
 
       IF <value_tab> IS ASSIGNED AND <value_struc> IS ASSIGNED.
         <value_struc> = <value_tab>.
@@ -112,18 +118,23 @@ CLASS z2ui5_cl_demo_app_212 IMPLEMENTATION.
 
     FIELD-SYMBOLS <row> TYPE any.
 
-    DATA(popup) = z2ui5_cl_xml_view=>factory_popup( ).
+    DATA popup TYPE REF TO z2ui5_cl_xml_view.
+    popup = z2ui5_cl_xml_view=>factory_popup( ).
 
-    DATA(content) = popup->dialog( contentwidth = '60%'
+    DATA content TYPE REF TO z2ui5_cl_xml_view.
+    content = popup->dialog( contentwidth = '60%'
           )->simple_form( layout   = 'ResponsiveGridLayout'
                           editable = abap_true
           )->content( ns = 'form' ).
 
     " Gehe über alle Comps wenn wir im Edit sind dann sind keyfelder nicht eingabebereit.
-    LOOP AT mt_dfies REFERENCE INTO DATA(dfies).
+    DATA temp1 LIKE LINE OF mt_dfies.
+    DATA dfies LIKE REF TO temp1.
+    LOOP AT mt_dfies REFERENCE INTO dfies.
 
       ASSIGN ms_table_row->* TO <row>.
-      ASSIGN COMPONENT dfies->fieldname OF STRUCTURE <row> TO FIELD-SYMBOL(<val>).
+      FIELD-SYMBOLS <val> TYPE any.
+      ASSIGN COMPONENT dfies->fieldname OF STRUCTURE <row> TO <val>.
       IF <val> IS NOT ASSIGNED.
         CONTINUE.
       ENDIF.
@@ -163,19 +174,22 @@ CLASS z2ui5_cl_demo_app_212 IMPLEMENTATION.
     FIELD-SYMBOLS <tab> TYPE data.
 
     IF mo_parent_view IS INITIAL.
-      DATA(page) = z2ui5_cl_xml_view=>factory( ).
+      DATA page TYPE REF TO z2ui5_cl_xml_view.
+      page = z2ui5_cl_xml_view=>factory( ).
     ELSE.
       page = mo_parent_view->get( `Page` ).
     ENDIF.
 
     ASSIGN mt_table->* TO <tab>.
 
-    DATA(table) = page->table( growing = 'true'
+    DATA table TYPE REF TO z2ui5_cl_xml_view.
+    table = page->table( growing = 'true'
                                width   = 'auto'
                                items   = client->_bind_edit( val = <tab> ) ).
 
     " TODO: variable is assigned but never used (ABAP cleaner)
-    DATA(headder) = table->header_toolbar(
+    DATA headder TYPE REF TO z2ui5_cl_xml_view.
+    headder = table->header_toolbar(
                )->overflow_toolbar(
                  )->toolbar_spacer( ).
 
@@ -196,7 +210,7 @@ CLASS z2ui5_cl_demo_app_212 IMPLEMENTATION.
   METHOD z2ui5_if_app~main.
     me->client = client.
 
-    IF client->check_on_init( ).
+    IF client->check_on_init( ) IS NOT INITIAL.
 
       on_init( ).
 
@@ -223,9 +237,11 @@ CLASS z2ui5_cl_demo_app_212 IMPLEMENTATION.
 
     TRY.
 
-        DATA(new_struct_desc) = cl_abap_structdescr=>create( mt_comp ).
+        DATA new_struct_desc TYPE REF TO cl_abap_structdescr.
+        new_struct_desc = cl_abap_structdescr=>create( mt_comp ).
 
-        DATA(new_table_desc) = cl_abap_tabledescr=>create( p_line_type  = new_struct_desc
+        DATA new_table_desc TYPE REF TO cl_abap_tabledescr.
+        new_table_desc = cl_abap_tabledescr=>create( p_line_type  = new_struct_desc
                                                            p_table_kind = cl_abap_tabledescr=>tablekind_std ).
 
         CREATE DATA mt_table     TYPE HANDLE new_table_desc.
@@ -236,7 +252,7 @@ CLASS z2ui5_cl_demo_app_212 IMPLEMENTATION.
 
         SELECT *
           FROM (mv_table)
-          INTO CORRESPONDING FIELDS OF TABLE @<table>
+          INTO CORRESPONDING FIELDS OF TABLE <table>
           UP TO 100 ROWS.
 
       CATCH cx_root.
@@ -256,15 +272,21 @@ CLASS z2ui5_cl_demo_app_212 IMPLEMENTATION.
     TRY.
         TRY.
 
+            DATA typedesc TYPE REF TO cl_abap_typedescr.
             cl_abap_typedescr=>describe_by_name( EXPORTING  p_name         = mv_table
-                                                 RECEIVING p_descr_ref     = DATA(typedesc)
+                                                 RECEIVING p_descr_ref     = typedesc
                                                  EXCEPTIONS type_not_found = 1
                                                             OTHERS         = 2 ).
 
-            DATA(structdesc) = CAST cl_abap_structdescr( typedesc ).
-            DATA(comp) = structdesc->get_components( ).
+            DATA temp2 TYPE REF TO cl_abap_structdescr.
+            temp2 ?= typedesc.
+            DATA structdesc LIKE temp2.
+            structdesc = temp2.
+            DATA comp TYPE abap_component_tab.
+            comp = structdesc->get_components( ).
 
-            LOOP AT comp INTO DATA(com).
+            DATA com LIKE LINE OF comp.
+            LOOP AT comp INTO com.
               IF com-as_include = abap_false.
                 APPEND com TO result.
               ENDIF.
@@ -274,9 +296,16 @@ CLASS z2ui5_cl_demo_app_212 IMPLEMENTATION.
 
         ENDTRY.
 
-        DATA(component) = VALUE cl_abap_structdescr=>component_table(
-                                    ( name = 'ROW_ID'
-                                      type = CAST #( cl_abap_datadescr=>describe_by_data( index ) ) ) ).
+        DATA temp3 TYPE cl_abap_structdescr=>component_table.
+        CLEAR temp3.
+        DATA temp4 LIKE LINE OF temp3.
+        temp4-name = 'ROW_ID'.
+        DATA temp1 TYPE REF TO cl_abap_datadescr.
+        temp1 ?= cl_abap_datadescr=>describe_by_data( index ).
+        temp4-type = temp1.
+        INSERT temp4 INTO TABLE temp3.
+        DATA component LIKE temp3.
+        component = temp3.
 
         APPEND LINES OF component TO result.
 

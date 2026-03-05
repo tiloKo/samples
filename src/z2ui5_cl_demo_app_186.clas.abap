@@ -46,8 +46,12 @@ CLASS Z2UI5_CL_DEMO_APP_186 IMPLEMENTATION.
 
   METHOD on_event.
 
-    IF client->check_on_event( 'BUTTON_DOWNLOAD' ).
-      client->follow_up_action( val = client->_event_client( val = client->cs_event-download_b64_file t_arg = VALUE #( ( file_content_64 ) ( file_name ) ) ) ).
+    IF client->check_on_event( 'BUTTON_DOWNLOAD' ) IS NOT INITIAL.
+      DATA temp1 TYPE string_table.
+      CLEAR temp1.
+      INSERT file_content_64 INTO TABLE temp1.
+      INSERT file_name INTO TABLE temp1.
+      client->follow_up_action( val = client->_event_client( val = client->cs_event-download_b64_file t_arg = temp1 ) ).
     ENDIF.
 
   ENDMETHOD.
@@ -58,11 +62,15 @@ CLASS Z2UI5_CL_DEMO_APP_186 IMPLEMENTATION.
     DATA lv_script TYPE string.
 
 
-    DATA(view) = z2ui5_cl_xml_view=>factory( ).
+    DATA view TYPE REF TO z2ui5_cl_xml_view.
+    view = z2ui5_cl_xml_view=>factory( ).
 
-    DATA(page) = view->shell(
+    DATA page TYPE REF TO z2ui5_cl_xml_view.
+    DATA temp1 TYPE xsdboolean.
+    temp1 = boolc( abap_false = client->get( )-check_launchpad_active ).
+    page = view->shell(
          )->page(
-            showheader     = xsdbool( abap_false = client->get( )-check_launchpad_active )
+            showheader     = temp1
             title          = 'abap2UI5 - Download Base64 File'
             navbuttonpress = client->_event_nav_app_leave( )
             shownavbutton  = client->check_app_prev_stack( ) ).
@@ -96,7 +104,7 @@ CLASS Z2UI5_CL_DEMO_APP_186 IMPLEMENTATION.
 
     me->client = client.
 
-    IF client->check_on_init( ).
+    IF client->check_on_init( ) IS NOT INITIAL.
 
       initialize( ).
       render_screen( ).

@@ -28,11 +28,13 @@ CLASS z2ui5_cl_demo_app_348 IMPLEMENTATION.
 
   METHOD z2ui5_if_app~main.
 
-    IF client->check_on_init( ).
+    IF client->check_on_init( ) IS NOT INITIAL.
 
       get_data( ).
 
-      mo_layout_obj = z2ui5_cl_demo_app_333=>factory( i_data   = REF #( ms_struc )
+      DATA temp1 LIKE REF TO ms_struc.
+      GET REFERENCE OF ms_struc INTO temp1.
+mo_layout_obj = z2ui5_cl_demo_app_333=>factory( i_data   = temp1
                                                       vis_cols = 5 ).
 
       ui5_view_display( client ).
@@ -40,7 +42,8 @@ CLASS z2ui5_cl_demo_app_348 IMPLEMENTATION.
 
     CASE client->get( )-event.
       WHEN 'GO'.
-        DATA(app) = z2ui5_cl_demo_app_336=>factory( ).
+        DATA app TYPE REF TO z2ui5_cl_demo_app_336.
+        app = z2ui5_cl_demo_app_336=>factory( ).
         client->nav_app_call( app ).
     ENDCASE.
 
@@ -69,7 +72,8 @@ CLASS z2ui5_cl_demo_app_348 IMPLEMENTATION.
 
   METHOD ui5_view_display.
 
-    DATA(page) = z2ui5_cl_xml_view=>factory( )->shell( )->page( title          = 'RTTI IV'
+    DATA page TYPE REF TO z2ui5_cl_xml_view.
+    page = z2ui5_cl_xml_view=>factory( )->shell( )->page( title          = 'RTTI IV'
                                                                 navbuttonpress = client->_event_nav_app_leave( )
                                                                 shownavbutton  = client->check_app_prev_stack( ) ).
 
@@ -77,7 +81,9 @@ CLASS z2ui5_cl_demo_app_348 IMPLEMENTATION.
                   press = client->_event( 'GO' )
                   type  = 'Success' ).
 
-    xml_form( i_data   = REF #( ms_struc )
+    DATA temp2 LIKE REF TO ms_struc.
+    GET REFERENCE OF ms_struc INTO temp2.
+xml_form( i_data   = temp2
               i_page   = page
               i_client = client ).
 
@@ -87,13 +93,13 @@ CLASS z2ui5_cl_demo_app_348 IMPLEMENTATION.
 
   METHOD get_data.
 
-    SELECT SINGLE id,
-                  id_prev,
-                  id_prev_app,
-                  id_prev_app_stack,
+    SELECT SINGLE id
+                  id_prev
+                  id_prev_app
+                  id_prev_app_stack
                   timestampl
       FROM z2ui5_t_01
-      INTO CORRESPONDING FIELDS OF @ms_struc.
+      INTO CORRESPONDING FIELDS OF ms_struc.
 
   ENDMETHOD.
 

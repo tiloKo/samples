@@ -51,7 +51,8 @@ CLASS z2ui5_cl_demo_app_353 IMPLEMENTATION.
 
   METHOD render.
 
-    DATA(page) = z2ui5_cl_xml_view=>factory( )->shell(
+    DATA page TYPE REF TO z2ui5_cl_xml_view.
+    page = z2ui5_cl_xml_view=>factory( )->shell(
           )->page( title          = 'abap2UI5 - Multiple Timers'
                    navbuttonpress = client->_event_nav_app_leave( )
                    shownavbutton  = client->check_app_prev_stack( ) ).
@@ -74,7 +75,8 @@ CLASS z2ui5_cl_demo_app_353 IMPLEMENTATION.
                                     device_height     = client->_bind_edit( device_height )
                                     device_width      = client->_bind_edit( device_width ) ).
 
-    DATA(form) = page->_z2ui5( )->focus( focusid = client->_bind( focus_field )
+    DATA form TYPE REF TO z2ui5_cl_xml_view.
+    form = page->_z2ui5( )->focus( focusid = client->_bind( focus_field )
 
           )->simple_form( editable = abap_true
 
@@ -97,7 +99,7 @@ CLASS z2ui5_cl_demo_app_353 IMPLEMENTATION.
 
     me->client = client.
 
-    IF client->check_on_init( ).
+    IF client->check_on_init( ) IS NOT INITIAL.
       focus_field = 'IdOne'.
       mv_check_active = abap_true.
       render( ).

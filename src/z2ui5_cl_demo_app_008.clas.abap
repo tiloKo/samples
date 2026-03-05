@@ -66,9 +66,11 @@ CLASS z2ui5_cl_demo_app_008 IMPLEMENTATION.
         strip_type = 'Success'.
     ENDCASE.
 
-    DATA(view) = z2ui5_cl_xml_view=>factory( ).
+    DATA view TYPE REF TO z2ui5_cl_xml_view.
+    view = z2ui5_cl_xml_view=>factory( ).
 
-    DATA(page) = view->shell(
+    DATA page TYPE REF TO z2ui5_cl_xml_view.
+    page = view->shell(
         )->page(
             title           = 'abap2UI5 - Messages'
             navbuttonpress  = client->_event_nav_app_leave( )

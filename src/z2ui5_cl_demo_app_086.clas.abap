@@ -30,8 +30,10 @@ CLASS Z2UI5_CL_DEMO_APP_086 IMPLEMENTATION.
 
   METHOD z2ui5_if_app~main.
 
-    DATA(view) = z2ui5_cl_xml_view=>factory( ).
-    DATA(page) = view->shell(
+    DATA view TYPE REF TO z2ui5_cl_xml_view.
+    view = z2ui5_cl_xml_view=>factory( ).
+    DATA page TYPE REF TO z2ui5_cl_xml_view.
+    page = view->shell(
         )->page(
                title          = 'abap2UI5 - Flow Logic - APP 85'
                navbuttonpress = client->_event_nav_app_leave( )

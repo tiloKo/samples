@@ -24,7 +24,7 @@ CLASS Z2UI5_CL_DEMO_APP_096 IMPLEMENTATION.
   METHOD z2ui5_if_app~main.
     me->client = client.
 
-    IF client->check_on_init( ).
+    IF client->check_on_init( ) IS NOT INITIAL.
       on_init( ).
       RETURN.
     ENDIF.
@@ -42,7 +42,7 @@ CLASS Z2UI5_CL_DEMO_APP_096 IMPLEMENTATION.
 
   METHOD on_event.
 
-    IF client->check_on_event( 'MESSAGE_SUB' ).
+    IF client->check_on_event( 'MESSAGE_SUB' ) IS NOT INITIAL.
       client->message_box_display( `event sub app` ).
     ENDIF.
 
@@ -52,7 +52,8 @@ CLASS Z2UI5_CL_DEMO_APP_096 IMPLEMENTATION.
 
     IF mo_view_parent IS NOT BOUND.
 
-      DATA(page) = z2ui5_cl_xml_view=>factory( )->shell(
+      DATA page TYPE REF TO z2ui5_cl_xml_view.
+      page = z2ui5_cl_xml_view=>factory( )->shell(
          )->page( title = 'Main View' ).
 
       mo_view_parent = page->grid( 'L6 M12 S12'

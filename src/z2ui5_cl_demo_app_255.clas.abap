@@ -29,7 +29,8 @@ CLASS z2ui5_cl_demo_app_255 IMPLEMENTATION.
 
   METHOD display_view.
 
-    DATA(css) = `.navigationExamples .code {`                    &&
+    DATA css TYPE string.
+    css = `.navigationExamples .code {`                    &&
                 `    margin: 0 5%;`                              &&
                 `    font-family: Consolas, Courier, monospace;` &&
                 `}`                                              &&
@@ -71,11 +72,13 @@ CLASS z2ui5_cl_demo_app_255 IMPLEMENTATION.
                 `}`.
 
 
-    DATA(view) = z2ui5_cl_xml_view=>factory( ).
+    DATA view TYPE REF TO z2ui5_cl_xml_view.
+    view = z2ui5_cl_xml_view=>factory( ).
     view->_generic( name = `style`
                     ns   = `html` )->_cc_plain_xml( css )->get_parent( ).
 
-    DATA(page) = view->shell(
+    DATA page TYPE REF TO z2ui5_cl_xml_view.
+    page = view->shell(
          )->page(
             title          = `abap2UI5 - Flex Box - Navigation Examples`
             navbuttonpress = client->_event_nav_app_leave( )
@@ -93,7 +96,8 @@ CLASS z2ui5_cl_demo_app_255 IMPLEMENTATION.
            target = '_blank'
            href   = 'https://sapui5.hana.ondemand.com/sdk/#/entity/sap.m.FlexBox/sample/sap.m.sample.FlexBoxNav' ).
 
-    DATA(layout) = page->vbox( class = `navigationExamples`
+    DATA layout TYPE REF TO z2ui5_cl_xml_view.
+    layout = page->vbox( class = `navigationExamples`
                           )->panel( headertext = `Variable width`
                               )->flex_box(
                                   class          = `ne-flexbox1`
@@ -129,7 +133,7 @@ CLASS z2ui5_cl_demo_app_255 IMPLEMENTATION.
 
   METHOD on_event.
 
-    IF client->check_on_event( 'POPOVER' ).
+    IF client->check_on_event( 'POPOVER' ) IS NOT INITIAL.
       z2ui5_display_popover( `hint_icon` ).
     ENDIF.
 
@@ -138,7 +142,8 @@ CLASS z2ui5_cl_demo_app_255 IMPLEMENTATION.
 
   METHOD z2ui5_display_popover.
 
-    DATA(view) = z2ui5_cl_xml_view=>factory_popup( ).
+    DATA view TYPE REF TO z2ui5_cl_xml_view.
+    view = z2ui5_cl_xml_view=>factory_popup( ).
     view->quick_view( placement = `Bottom`
                       width     = `auto`
               )->quick_view_page( pageid      = `sampleInformationId`
@@ -156,7 +161,7 @@ CLASS z2ui5_cl_demo_app_255 IMPLEMENTATION.
 
     me->client = client.
 
-    IF client->check_on_init( ).
+    IF client->check_on_init( ) IS NOT INITIAL.
       display_view( client ).
     ENDIF.
 

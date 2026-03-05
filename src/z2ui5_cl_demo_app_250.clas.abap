@@ -29,7 +29,8 @@ CLASS z2ui5_cl_demo_app_250 IMPLEMENTATION.
 
   METHOD display_view.
 
-    DATA(page_01) = z2ui5_cl_xml_view=>factory( )->shell(
+    DATA page_01 TYPE REF TO z2ui5_cl_xml_view.
+    page_01 = z2ui5_cl_xml_view=>factory( )->shell(
          )->page(
             title          = 'abap2UI5 - Sample: OverflowToolbar - Alignment'
             navbuttonpress = client->_event_nav_app_leave( )
@@ -47,7 +48,8 @@ CLASS z2ui5_cl_demo_app_250 IMPLEMENTATION.
            target = '_blank'
            href   = 'https://sapui5.hana.ondemand.com/sdk/#/entity/sap.m.OverflowToolbar/sample/sap.m.sample.ToolbarAlignment' ).
 
-    DATA(page_02) = page_01->page(
+    DATA page_02 TYPE REF TO z2ui5_cl_xml_view.
+    page_02 = page_01->page(
                          )->invisible_text( ns   = `core`
                                             id   = `inputLabel`
                                             text = `Input label` )->get_parent(
@@ -124,7 +126,7 @@ CLASS z2ui5_cl_demo_app_250 IMPLEMENTATION.
 
   METHOD on_event.
 
-    IF client->check_on_event( 'POPOVER' ).
+    IF client->check_on_event( 'POPOVER' ) IS NOT INITIAL.
       z2ui5_display_popover( `hint_icon` ).
     ENDIF.
 
@@ -133,7 +135,8 @@ CLASS z2ui5_cl_demo_app_250 IMPLEMENTATION.
 
   METHOD z2ui5_display_popover.
 
-    DATA(view) = z2ui5_cl_xml_view=>factory_popup( ).
+    DATA view TYPE REF TO z2ui5_cl_xml_view.
+    view = z2ui5_cl_xml_view=>factory_popup( ).
     view->quick_view( placement = `Bottom`
                       width     = `auto`
               )->quick_view_page( pageid      = `sampleInformationId`
@@ -151,7 +154,7 @@ CLASS z2ui5_cl_demo_app_250 IMPLEMENTATION.
 
     me->client = client.
 
-    IF client->check_on_init( ).
+    IF client->check_on_init( ) IS NOT INITIAL.
       display_view( client ).
     ENDIF.
 
